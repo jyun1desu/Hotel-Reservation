@@ -93,7 +93,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 main {
   background: rgba(192, 192, 192, 0.2);
   background-image: linear-gradient(
