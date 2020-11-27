@@ -1,6 +1,6 @@
 <template>
   <main>
-    <nav>
+    <nav class="navbar">
       <div class="logo">
         <div class="shadow"></div>
         <div class="brand_box">
@@ -37,17 +37,23 @@ body,
 }
 
 main {
+  background: rgba(192,192,192,0.20);
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.00) 35%, rgba(0,0,0,0.35) 100%);
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   padding: 50px 0 70px 50px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
 }
 
-nav {
+.navbar {
+  flex: 0 0 100%;
   display: flex;
   justify-content: space-between;
+  align-self: start;
   .logo {
     user-select: none;
     display: inline-block;
@@ -135,18 +141,51 @@ nav {
 }
 
 .now_room {
+  align-self: flex-end;
   .room_background {
+    object-fit: cover;
     position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    object-fit: cover;
     z-index: -1;
   }
 
-  &_information{
-    background-color: pink;
+  &_information {
+    .room_number {
+      font-size: 66px;
+      line-height: 66px;
+      color: #fff;
+      position: relative;
+      display: inline-block;
+      padding: 0px 5px;
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        width: 100%;
+        height: 20px;
+        background-image: repeating-linear-gradient(
+          45deg,
+          white 16px,
+          white 17px,
+          rgba(255, 255, 255, 0.3) 17px,
+          rgba(255, 255, 255, 0.3) 23px
+        );
+      }
+    }
+    .room_type{
+      color: white;
+      font-size: 24px;
+      font-weight: 300;
+      font-family: 'Noto Sans TC','Roboto', sans-serif;
+      letter-spacing: 2.5px;
+      margin-top: 10px;
+    }
   }
 }
+
 </style>
