@@ -10,6 +10,7 @@
       <div class="guide_area">
         <div class="room_guide">
           <RoomLink 
+          @toRoomPage="toRoomPage"
           v-for="room in rooms"
           :key="room.id"
           :room="room"/>
@@ -72,6 +73,13 @@ export default {
         ],
       },
     };
+  },
+  methods:{
+    toRoomPage(){
+      this.$router.push({
+        name:'RoomPage'
+      });
+    }
   },
   components:{
     RoomLink,

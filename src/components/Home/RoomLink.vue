@@ -1,6 +1,8 @@
 <template>
   <div class="link">
-    <a class="guide_link" href="#">{{room.name}}</a>
+    <a 
+    class="guide_link"
+    @click="$emit('to-room-page')">{{room.name}}</a>
     <div class="detail_infomation"></div>
   </div>
 </template>
@@ -28,6 +30,7 @@ export default {
     font-size: 14px;
     letter-spacing: 1.5px;
     position: relative;
+    cursor: pointer;
 
     &.hover-active {
       &::before {
