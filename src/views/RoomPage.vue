@@ -35,35 +35,35 @@
               <p class="time">{{ checkTime.checkOutTime }}</p>
             </div>
           </div>
-          <amenities
-          :list="room.amenities"
-          />
+          <amenities :list="room.amenities" />
         </div>
         <div class="room_info__price">
           <div class="weekday">
-            <p class="price">NT.{{room.normalDayPrice}}</p>
+            <p class="price">NT.{{ room.normalDayPrice }}</p>
             <p class="period">平日(一～四)</p>
           </div>
           <div class="weekend">
-            <p class="price">NT.{{room.holidayPrice}}</p>
+            <p class="price">NT.{{ room.holidayPrice }}</p>
             <p class="period">假日(五～日)</p>
           </div>
         </div>
       </div>
       <div class="reservation">
-        <div class="calender"></div>
-        <div class="reservation__button"></div>
+        <calenderPicker />
+        <button class="reservation__button">預約時段</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import amenities from '../components/RoomPage/amenities.vue'
+import amenities from "../components/RoomPage/amenities.vue";
+import calenderPicker from "../components/RoomPage/calenderPicker.vue";
 export default {
   name: "RoomPage",
-  components:{
+  components: {
     amenities,
+    calenderPicker,
   },
   computed: {
     room() {
@@ -93,6 +93,7 @@ export default {
 
 <style scoped lang="scss">
 $grey_font_color: #6d7278;
+$button_color: #575757;
 .banner {
   width: 100%;
   height: 85vh;
@@ -124,10 +125,11 @@ $grey_font_color: #6d7278;
 .room_detail {
   display: flex;
   padding: 50px 60px;
+  box-sizing: border-box;
   .room_info {
     display: flex;
     flex: 1 1 65%;
-    margin-right: 30px;
+    margin-right: 40px;
     p {
       font-size: 14px;
       letter-spacing: 1.5px;
@@ -213,6 +215,35 @@ $grey_font_color: #6d7278;
   }
   .reservation {
     flex: 1 1 35%;
+    &__button {
+      color: #fff;
+      padding: 15px 25px;
+      margin-top: 25px;
+      background-color: $button_color;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      letter-spacing: 2px;
+      position: relative;
+
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        z-index: -1;
+        top:9px;
+        left:8px;
+        width: 120px;
+        height:50px;
+        background-image: repeating-linear-gradient(
+          45deg,
+          $button_color 11px,
+          $button_color 11px,
+          rgba(255, 255, 255, 0.3) 12px,
+          rgba(255, 255, 255, 0.3) 15px
+        );
+      }
+    }
   }
 }
 </style>
