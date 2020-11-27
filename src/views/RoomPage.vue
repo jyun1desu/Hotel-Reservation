@@ -25,12 +25,29 @@
             <div class="line"><span></span></div>
             <div class="line"><span></span></div>
           </div>
-          <div class="check_time"></div>
-          <div class="service_lisl"></div>
+          <div class="check_time">
+            <div class="check_in">
+              <p>Check In</p>
+              <p class="time">{{ checkTime.checkInTime }}</p>
+            </div>
+            <div class="check_out">
+              <p>Check Out</p>
+              <p class="time">{{ checkTime.checkOutTime }}</p>
+            </div>
+          </div>
+          <amenities
+          :list="room.amenities"
+          />
         </div>
         <div class="room_info__price">
-          <div class="weekday"></div>
-          <div class="weekend"></div>
+          <div class="weekday">
+            <p class="price">NT.{{room.normalDayPrice}}</p>
+            <p class="period">平日(一～四)</p>
+          </div>
+          <div class="weekend">
+            <p class="price">NT.{{room.holidayPrice}}</p>
+            <p class="period">假日(五～日)</p>
+          </div>
         </div>
       </div>
       <div class="reservation">
@@ -42,8 +59,12 @@
 </template>
 
 <script>
+import amenities from '../components/RoomPage/amenities.vue'
 export default {
   name: "RoomPage",
+  components:{
+    amenities,
+  },
   computed: {
     room() {
       return this.$store.state.nowRoom;
@@ -59,11 +80,19 @@ export default {
 
       return { guestRange, bedInfo, bathAmount, footage };
     },
+    checkTime() {
+      const checkTimeData = this.room.checkInAndOut;
+      const checkInTime = `${checkTimeData.checkInEarly} — ${checkTimeData.checkInLate}`;
+      const checkOutTime = checkTimeData.checkOut;
+
+      return { checkInTime, checkOutTime };
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
+$grey_font_color: #6d7278;
 .banner {
   width: 100%;
   height: 85vh;
@@ -98,50 +127,92 @@ export default {
   .room_info {
     display: flex;
     flex: 1 1 65%;
+    margin-right: 30px;
+    p {
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      line-height: 30px;
+    }
     &__description {
-      flex: 1 1 65%;
-      margin-right: 30px;
+      flex: 2 1 65%;
+      margin-right: 35px;
       .name {
         font-size: 36px;
         letter-spacing: 4px;
         margin: 0 0 30px;
+        line-height: 40px;
       }
       .basic_introduction {
-        font-size: 14px;
-        letter-spacing: 1.5px;
-        line-height: 30px;
-
         .text {
           text-align: justify;
+          font-size: 12px;
+          line-height: 20px;
+          letter-spacing: 1.3px;
+        }
+      }
+      .dividing_line {
+        margin: 30px 0 15px;
+        .line {
+          display: inline-block;
+          width: 15px;
+          height: 15px;
+          & + .line {
+            margin-left: 10px;
+          }
+          span {
+            display: block;
+            width: 13px;
+            height: 1px;
+            background-color: #000;
+            transform: rotate(45deg);
+          }
+        }
+      }
+      .check_time {
+        display: flex;
+        & > div {
+          flex: 1 1 50%;
+          p {
+            margin: 0;
+          }
+          .time {
+            font-size: 22px;
+            letter-spacing: 2.2px;
+          }
         }
       }
     }
-    .dividing_line {
-      margin: 30px 0;
-      .line {
-        display: inline-block;
-        width: 15px;
-        height: 15px;
-        &+.line{
-          margin-left: 10px;
-        }
-        span {
-          display: block;
-          width: 13px;
-          height: 1px;
-          background-color: #000;
-          transform: rotate(45deg);
+    &__price {
+      flex: 1 1 auto;
+      text-align: right;
+      font-weight: 300;
+      .weekday {
+        .price {
+          font-size: 30px;
+          letter-spacing: 3px;
+          line-height: 40px;
+          vertical-align: bottom;
+          margin: 0;
         }
       }
-    }
-    &__price{
-      flex: 1 1 35%;
-      background-color:grey;
+      .weekend {
+        margin-top: 15px;
+        .price {
+          font-size: 16px;
+          letter-spacing: 2px;
+          margin: 0;
+        }
+      }
+      .period {
+        margin: 0;
+        font-size: 14px;
+        letter-spacing: 1.5px;
+        color: $grey_font_color;
+      }
     }
   }
-  .reservation{
+  .reservation {
     flex: 1 1 35%;
-    background-color: green;
   }
 }
 </style>
