@@ -46,6 +46,7 @@ export default {
         .room_number {
         font-size: 66px;
         line-height: 66px;
+        font-weight: 300;
         color: #fff;
         position: relative;
         display: inline-block;

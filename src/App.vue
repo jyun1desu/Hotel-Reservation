@@ -5,11 +5,11 @@
 </template>
 
 <style lang="scss">
-html,
-body,
 *{
   // outline: 1px solid pink;
 }
+html,
+body,
 #app {
   width: 100%;
   height: 100%;

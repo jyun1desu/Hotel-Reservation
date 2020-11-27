@@ -29,6 +29,7 @@ export default {
     color: #000;
     font-size: 14px;
     letter-spacing: 1.5px;
+    font-weight: 300;
     position: relative;
     cursor: pointer;
 

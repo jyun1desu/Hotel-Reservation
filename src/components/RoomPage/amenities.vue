@@ -65,16 +65,15 @@ $no_offer_color: #6d7278;
         letter-spacing: 1.5px;
         margin-bottom: 30px;
         .icon {
+            text-align: center;
             display: inline-block;
-            width: 15px;
-            height: 15px;
-            font-size: 12px;
+            width: 16px;
             margin-right: 20px;
-            line-height: 15px;
         }
-        &__name{
+        &__name,.icon{
             font-size: 12px;
             line-height: 15px;
+            vertical-align: middle;
         }
 
         &.no_offer {

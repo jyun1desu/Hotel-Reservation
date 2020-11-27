@@ -1,7 +1,7 @@
 <template>
   <div class="room_page">
     <div class="banner">
-      <div class="logo">
+      <div @click="toHomePage" class="logo">
         <div class="shadow"></div>
         <h1 class="brand_name">WhiteSpace</h1>
       </div>
@@ -69,6 +69,13 @@ export default {
     amenities,
     calenderPicker,
   },
+  methods:{
+    toHomePage(){
+      this.$router.push({
+        name:'Home'
+      });
+    }
+  },
   computed: {
     room() {
       return this.$store.state.nowRoom;
@@ -108,6 +115,8 @@ $button_color: #575757;
     position: absolute;
     top: 35px;
     left: 50px;
+    cursor: pointer;
+    user-select: none;
     .shadow {
       width: 150px;
       height: 45px;

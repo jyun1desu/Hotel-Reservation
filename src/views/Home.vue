@@ -146,7 +146,7 @@ main {
       .brand_name {
         margin: 0;
         font-size: 30px;
-        font-weight: 600;
+        font-weight: 400;
         color: white;
         letter-spacing: 3.2px;
         text-align: center;
@@ -183,9 +183,9 @@ main {
     }
 
     .contact_information {
-      // margin-top: 100px;
       padding-left: 25px;
       color: #fff;
+      font-weight: 300;
       .social_media {
         font-size: 21px;
         margin-bottom: 45px;
