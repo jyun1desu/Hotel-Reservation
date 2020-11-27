@@ -7,6 +7,9 @@
 <style lang="scss">
 html,
 body,
+*{
+  // outline: 1px solid pink;
+}
 #app {
   width: 100%;
   height: 100%;

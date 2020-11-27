@@ -1,6 +1,10 @@
 <template>
   <div class="room_page">
     <div class="banner">
+      <div class="logo">
+        <div class="shadow"></div>
+        <h1 class="brand_name">WhiteSpace</h1>
+      </div>
       <div class="main_image">
         <img src="../assets/room_example.jpeg" alt="" />
       </div>
@@ -99,7 +103,35 @@ $button_color: #575757;
   height: 85vh;
   display: flex;
   box-shadow: 0px 1px 10px 3px rgba(0, 0, 0, 0.2);
-
+  position: relative;
+  .logo {
+    position: absolute;
+    top: 35px;
+    left: 50px;
+    .shadow {
+      width: 150px;
+      height: 45px;
+      clip-path: polygon(0% 0%, 0% 100%, 10% 100%, 10% 20%, 100% 20%, 100% 0%);
+      background-image: repeating-linear-gradient(
+        45deg,
+        #000 10px,
+        #000 11px,
+        rgba(255, 255, 255, 0.3) 11px,
+        rgba(255, 255, 255, 0.3) 15px
+      );
+    }
+    .brand_name {
+      position: absolute;
+      left: 14px;
+      top: 8px;
+      font-size: 18px;
+      letter-spacing: 2px;
+      font-weight: 500;
+      margin: 0;
+      padding: 10px 16px;
+      border: 1px solid #000;
+    }
+  }
   .main_image {
     flex-basis: 65%;
     img {
@@ -134,13 +166,15 @@ $button_color: #575757;
       font-size: 14px;
       letter-spacing: 1.5px;
       line-height: 30px;
+      font-weight: 300;
     }
     &__description {
       flex: 2 1 65%;
       margin-right: 35px;
       .name {
         font-size: 36px;
-        letter-spacing: 4px;
+        font-weight: 400;
+        letter-spacing: 5px;
         margin: 0 0 30px;
         line-height: 40px;
       }
@@ -148,6 +182,7 @@ $button_color: #575757;
         .text {
           text-align: justify;
           font-size: 12px;
+          font-weight: 300;
           line-height: 20px;
           letter-spacing: 1.3px;
         }
@@ -231,10 +266,10 @@ $button_color: #575757;
         display: block;
         position: absolute;
         z-index: -1;
-        top:9px;
-        left:8px;
+        top: 9px;
+        left: 8px;
         width: 120px;
-        height:50px;
+        height: 50px;
         background-image: repeating-linear-gradient(
           45deg,
           $button_color 11px,

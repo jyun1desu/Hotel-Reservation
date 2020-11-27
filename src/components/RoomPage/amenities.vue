@@ -1,59 +1,85 @@
 <template>
     <div class="amenities">
         <div
-        v-for="(item,index) in listArray"
+        v-for="(item, index) in listArray"
         :key="index"
         class="services"
-        :class="{no_offer:!item.isOffer}"
+        :class="{ no_offer: !item.isOffer }"
         >
-        <span class="icon"><i class="fas fa-wifi"></i></span>
-        <span class="item_name">{{item.name}}</span>
-        
+        <span class="icon"><i :class="item.classes"></i></span>
+        <span class="services__name">{{ item.chinese }}</span>
         </div>
     </div>
 </template>
 
 <script>
-export default ({
-    name:'amenities',
-    props:{
-        list:Object,
+export default {
+    name: "amenities",
+    props: {
+        list: Object,
     },
-    computed:{
-        listArray(){
+    computed: {
+        listArray() {
             const keys = Object.keys(this.list);
             const value = Object.values(this.list);
-            const list = keys.map((name,index)=>{
-                const isOffer = value[index]
-                return {name,isOffer}
-            })
-            return list
-        }
-    }
-})
+            const amenitieList = [
+                { english: "Wi-Fi", chinese: "Wi-Fi",class:['fas','fa-wifi'] },
+                { english: "Breakfast", chinese: "早餐",class:['fas','fa-utensils']},
+                { english: "Mini-Bar", chinese: "Mini-Bar",class:['fas','fa-cocktail'] },
+                { english: "Room-Service", chinese: "Room-Service",class:['fas','fa-concierge-bell'] },
+                { english: "Television", chinese: "電視",class:['fas','fa-tv'] },
+                { english: "Air-Conditioner", chinese: "空調",class:['fas','fa-wind'] },
+                { english: "Refrigerator", chinese: "冰箱",class:['fas','fa-ice-cream'] },
+                { english: "Sofa", chinese: "沙發",class:['fas','fa-couch']},
+                { english: "Great-View", chinese: "漂亮的視野",class:['fas','fa-mountain']},
+                { english: "Smoke-Free", chinese: "禁止吸菸",class:['fas','fa-smoking-ban'] },
+                { english: "Child-Friendly", chinese: "適合兒童",class:['fas','fa-baby'] },
+                { english: "Pet-Friendly", chinese: "寵物攜帶",class:['fas','fa-dog'] },
+                ];
+            const list = keys.map((name, index) => {
+            const isOffer = value[index];
+            const chinese = amenitieList.find(item=>item.english===name).chinese;
+            const classes = amenitieList.find(item=>item.english===name).class;
+                return { isOffer,chinese,classes};
+            });
+            return list;
+        },
+    },
+};
 </script>
 
 <style lang="scss" scoped>
-$board_color:#F0F0F0;
-$no_offer_color:#6D7278;
-.amenities{
+$board_color: #f0f0f0;
+$no_offer_color: #6d7278;
+.amenities {
     margin-top: 40px;
     padding: 30px 0 0 25px;
     background-color: $board_color;
     display: flex;
     flex-wrap: wrap;
 
-    .services{
+    .services {
+        font-weight: 300;
         flex: 1 1 30%;
-        font-size: 12px;
+        font-size: 0;
+        letter-spacing: 1.5px;
         margin-bottom: 30px;
-        .icon{
-            margin-right:20px;
+        .icon {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            font-size: 12px;
+            margin-right: 20px;
+            line-height: 15px;
         }
-        &.no_offer{
-            color: $no_offer_color;
+        &__name{
+            font-size: 12px;
+            line-height: 15px;
         }
 
+        &.no_offer {
+        color: $no_offer_color;
+        }
     }
 }
 </style>
