@@ -1,5 +1,5 @@
 <template>
-    <main>
+  <main>
     <nav class="navbar">
       <div class="logo">
         <div class="shadow"></div>
@@ -9,55 +9,80 @@
       </div>
       <div class="guide_area">
         <div class="room_guide">
-          <a href="#" class="guide_link">Single Room</a>
-          <a href="#" class="guide_link">Deluxe Single Room</a>
-          <a href="#" class="guide_link">Double Room</a>
-          <a href="#" class="guide_link">Deluxe Double Room</a>
-          <a href="#" class="guide_link">Twin Room</a>
-          <a href="#" class="guide_link">Deluxe Twin Room</a>
+          <RoomLink 
+          v-for="room in rooms"
+          :key="room.id"
+          :room="room"/>
         </div>
         <div class="contact_information">
           <div class="social_media">
-            <a href="#"><i class="fab fa-facebook-square"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a
+              v-for="platform in contact.social_media"
+              :key="platform.title"
+              href=""
+            >
+              <i :class="platform.icon"></i>
+            </a>
           </div>
           <div class="contact_ways">
-            <div class="phone">
-              <i class="fas fa-phone-alt"></i>
-              <span>02-17264937</span>
-            </div>
-            <div class="email">
-              <i class="fas fa-envelope"></i>
-              <span>whitespace@whitespace.com.tw</span>
-            </div>
-            <div class="address">
-              <i class="fas fa-home"></i>
-              <span>台北市羅斯福路十段30號</span>
+            <div
+              v-for="way in contact.contact_ways"
+              :key="way.title"
+              :class="way.title"
+            >
+              <i :class="way.icon"></i>
+              <span>{{ way.content }}</span>
             </div>
           </div>
         </div>
       </div>
     </nav>
-    <div class="now_room">
-      <img src="../assets/room_example.jpeg" class="room_background" />
-      <div class="now_room_information">
-        <div class="room_number">04</div>
-        <div class="room_type">Deluxe Double Room</div>
-      </div>
-    </div>
+    <BackgroundRoom />
   </main>
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-
+import RoomLink from '../components/Home/RoomLink.vue'
+import BackgroundRoom from '../components/Home/BackgroundRoom.vue'
 export default {
-  name: 'Home',
-  components: {
-    // HelloWorld
-  }
-}
+  name: "Home",
+  data() {
+    return {
+      contact: {
+        social_media: [
+          { title: "facebook", icon: ["fab", "fa-facebook-square"], link: "#" },
+          { title: "instagram", icon: ["fab", "fa-instagram"], link: "#" },
+        ],
+        contact_ways: [
+          {
+            title: "phone",
+            content: "02-17264937",
+            icon: ["fas", "fa-phone-alt"],
+          },
+          {
+            title: "email",
+            content: "whitespace@whitespace.com.tw",
+            icon: ["fas", "fa-envelope"],
+          },
+          {
+            title: "address",
+            content: "台北市羅斯福路十段30號",
+            icon: ["fas", "fa-home"],
+          },
+        ],
+      },
+    };
+  },
+  components:{
+    RoomLink,
+    BackgroundRoom,
+  },
+  computed: {
+    rooms() {
+      return this.$store.state.items;
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -146,32 +171,7 @@ main {
           rgba(255, 255, 255, 0.3) 23px
         );
       }
-      a {
-        display: block;
-        text-decoration: none;
-        color: #000;
-        font-size: 14px;
-        letter-spacing: 1.5px;
-        position: relative;
-        margin-left: 10px;
-
-        &:hover {
-          &::before {
-            content: "";
-            width: 15px;
-            height: 1px;
-            background-color: #000;
-            position: absolute;
-            top: 50%;
-            left: -25px;
-            transform: translateY(-50%);
-          }
-        }
-
-        & + a {
-          margin-top: 35px;
-        }
-      }
+      
     }
 
     .contact_information {
@@ -200,55 +200,6 @@ main {
           font-size: 15px;
         }
       }
-    }
-  }
-}
-
-.now_room {
-  position: absolute;
-  bottom:70px;
-  .room_background {
-    object-fit: cover;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
-
-  &_information {
-    .room_number {
-      font-size: 66px;
-      line-height: 66px;
-      color: #fff;
-      position: relative;
-      display: inline-block;
-      padding: 0px 5px;
-      &::after {
-        content: "";
-        display: block;
-        position: absolute;
-        left: 0px;
-        bottom: 0px;
-        width: 100%;
-        height: 20px;
-        background-image: repeating-linear-gradient(
-          45deg,
-          white 16px,
-          white 17px,
-          rgba(255, 255, 255, 0.3) 17px,
-          rgba(255, 255, 255, 0.3) 23px
-        );
-      }
-    }
-    .room_type {
-      color: white;
-      font-size: 24px;
-      font-weight: 300;
-      font-family: "Noto Sans TC", "Roboto", sans-serif;
-      letter-spacing: 2.5px;
-      margin-top: 10px;
     }
   }
 }
