@@ -7,38 +7,41 @@
           <h1 class="brand_name">White Space</h1>
         </div>
       </div>
-      <div class="guide_area">
-        <div class="room_guide">
-          <RoomLink
-            @toRoomPage="toRoomPage"
-            v-for="room in rooms"
-            :key="room.id"
-            :room="room"
-          />
-        </div>
-        <div class="contact_information">
-          <div class="social_media">
-            <a
-              v-for="platform in contact.social_media"
-              :key="platform.title"
-              href=""
-            >
-              <i :class="platform.icon"></i>
-            </a>
+      <toggleIcon @click="toggleList = !toggleList" />
+      <transition name="slide-in-out">
+        <div class="guide_area" v-if="toggleList">
+          <div class="room_guide">
+            <RoomLink
+              @toRoomPage="toRoomPage"
+              v-for="room in rooms"
+              :key="room.id"
+              :room="room"
+            />
           </div>
-          <div class="contact_ways">
-            <a
-              :href="way.link"
-              v-for="way in contact.contact_ways"
-              :key="way.title"
-              :class="way.title"
-            >
-              <i :class="way.icon"></i>
-              <span>{{ way.content }}</span>
-            </a>
+          <div class="contact_information">
+            <div class="social_media">
+              <a
+                v-for="platform in contact.social_media"
+                :key="platform.title"
+                href=""
+              >
+                <i :class="platform.icon"></i>
+              </a>
+            </div>
+            <div class="contact_ways">
+              <a
+                :href="way.link"
+                v-for="way in contact.contact_ways"
+                :key="way.title"
+                :class="way.title"
+              >
+                <i :class="way.icon"></i>
+                <span>{{ way.content }}</span>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      </transition>
     </nav>
     <BackgroundRoom />
   </main>
@@ -47,6 +50,7 @@
 <script>
 import RoomLink from "../components/Home/RoomLink.vue";
 import BackgroundRoom from "../components/Home/BackgroundRoom.vue";
+import toggleIcon from "../components/Home/toggleIcon.vue";
 export default {
   name: "Home",
   data() {
@@ -76,6 +80,7 @@ export default {
           },
         ],
       },
+      toggleList: false,
     };
   },
   methods: {
@@ -88,6 +93,7 @@ export default {
   components: {
     RoomLink,
     BackgroundRoom,
+    toggleIcon,
   },
   computed: {
     rooms() {
@@ -176,7 +182,7 @@ main {
   }
 
   .guide_area {
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
     position: absolute;
@@ -279,5 +285,17 @@ main {
       }
     }
   }
+}
+
+.slide-in-out-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-in-out-leave-active {
+  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-in-out-enter,
+.slide-in-out-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>
