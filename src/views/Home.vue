@@ -56,7 +56,7 @@ export default {
   created() {
     window.addEventListener("resize", this.windowResize);
   },
-  mounted(){
+  mounted() {
     this.windowResize();
   },
   unmounted() {
@@ -94,9 +94,9 @@ export default {
   },
   methods: {
     windowResize() {
-      if(window.innerWidth>768){
+      if (window.innerWidth >= 768) {
         this.toggleList = true;
-      }else{
+      } else {
         this.toggleList = false;
       }
     },
@@ -290,15 +290,21 @@ main {
             color: #fff;
           }
           & + a {
-            margin-top: 15px;
+            margin-top: 10px;
           }
         }
         i {
-          font-size: 18px;
           margin-right: 12px;
+          font-size: 12px;
+          @include RWD($pad) {
+            font-size: 14px;
+          }
         }
         span {
-          font-size: 15px;
+          font-size: 12px;
+          @include RWD($pad) {
+            font-size: 14px;
+          }
         }
       }
     }

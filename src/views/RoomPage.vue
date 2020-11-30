@@ -15,8 +15,18 @@
     </div>
     <div class="room_detail">
       <div class="room_info">
+        <h2 class="name">{{ room.name }}</h2>
+        <div class="room_price small">
+          <div class="weekday">
+            <p class="price">NT.{{ room.normalDayPrice }}</p>
+            <p class="period">平日(一～四)</p>
+          </div>
+          <div class="weekend">
+            <p class="price">NT.{{ room.holidayPrice }}</p>
+            <p class="period">假日(五～日)</p>
+          </div>
+        </div>
         <div class="room_info__description">
-          <h2 class="name">{{ room.name }}</h2>
           <div class="basic_introduction">
             <p>房客人數限制：{{ shortDescription.guestRange }}人</p>
             <p>床型：{{ shortDescription.bedInfo }}</p>
@@ -41,15 +51,15 @@
           </div>
           <amenities :list="room.amenities" />
         </div>
-        <div class="room_info__price">
-          <div class="weekday">
-            <p class="price">NT.{{ room.normalDayPrice }}</p>
-            <p class="period">平日(一～四)</p>
-          </div>
-          <div class="weekend">
-            <p class="price">NT.{{ room.holidayPrice }}</p>
-            <p class="period">假日(五～日)</p>
-          </div>
+      </div>
+      <div class="room_price big">
+        <div class="weekday">
+          <p class="price">NT.{{ room.normalDayPrice }}</p>
+          <p class="period">平日(一～四)</p>
+        </div>
+        <div class="weekend">
+          <p class="price">NT.{{ room.holidayPrice }}</p>
+          <p class="period">假日(五～日)</p>
         </div>
       </div>
       <div class="reservation">
@@ -109,6 +119,9 @@ $button_color: #575757;
   width: 100%;
   height: 40vh;
   @include RWD($pad) {
+    height: 60vh;
+  }
+  @include RWD($pad_horizontal) {
     height: 85vh;
   }
   display: flex;
@@ -181,33 +194,50 @@ $button_color: #575757;
 }
 
 .room_detail {
-  display: flex;
   padding: 15px 20px;
-    @include RWD($pad) {
+  display: flex;
+  flex-direction: column;
+  @include RWD($pad) {
+    flex-direction: row;
+    flex-wrap: wrap;
     padding: 50px 60px;
   }
   box-sizing: border-box;
   .room_info {
-    display: flex;
-    flex: 1 1 65%;
-    margin-right: 40px;
+    flex: 1 0 100%;
+    justify-content: space-between;
+    @include RWD($pad) {
+      flex: 1 1 40%;
+    }
+    @include RWD($pad_horizontal) {
+      margin-right: 40px;
+    }
     p {
       font-size: 14px;
       letter-spacing: 1.5px;
       line-height: 30px;
       font-weight: 300;
     }
-    &__description {
-      flex: 2 1 65%;
-      margin-right: 35px;
-      .name {
+    .name {
+      font-size: 30px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      margin: 0;
+      line-height: 40px;
+      @include RWD($phone_horizontal) {
         font-size: 36px;
-        font-weight: 400;
         letter-spacing: 5px;
-        margin: 0 0 30px;
-        line-height: 40px;
+        margin: 0 0 20px;
+      }
+    }
+    &__description {
+      @include RWD($pad_horizontal) {
+        margin-right: 20px;
       }
       .basic_introduction {
+        & > p {
+          margin: 10px 0;
+        }
         .text {
           text-align: justify;
           font-size: 12px;
@@ -248,41 +278,97 @@ $button_color: #575757;
         }
       }
     }
-    &__price {
-      flex: 1 1 auto;
-      text-align: right;
-      font-weight: 300;
+  }
+  .room_price {
+    &.big {
+      display: none;
+      @include RWD($pad) {
+        display: block;
+        text-align: right;
+        margin: 0 0 0 30px;
+      }
+      @include RWD($pad_horizontal) {
+        margin-left: 0;
+        margin-right: 40px;
+      }
+    }
+    &.small {
+      display: flex;
+      align-items: flex-end;
+      margin-top: 10px;
+
       .weekday {
         .price {
-          font-size: 30px;
-          letter-spacing: 3px;
-          line-height: 40px;
+          font-size: 20px;
+          letter-spacing: 2px;
+          line-height: 20px;
           vertical-align: bottom;
           margin: 0;
         }
       }
+
       .weekend {
-        margin-top: 15px;
         .price {
-          font-size: 16px;
+          line-height: 12px;
+          font-size: 12px;
           letter-spacing: 2px;
           margin: 0;
         }
       }
+
       .period {
         margin: 0;
-        font-size: 14px;
+        font-size: 12px;
         letter-spacing: 1.5px;
         color: $grey_font_color;
       }
+
+      @include RWD($pad) {
+        display: none;
+      }
+    }
+    font-weight: 300;
+    .weekday {
+      .price {
+        font-size: 30px;
+        letter-spacing: 3px;
+        line-height: 40px;
+        vertical-align: bottom;
+        margin: 0;
+      }
+    }
+    .weekend {
+      margin-top: 15px;
+      margin-left: 15px;
+      .price {
+        font-size: 16px;
+        letter-spacing: 2px;
+        margin: 0;
+      }
+    }
+    .period {
+      margin: 0;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      color: $grey_font_color;
     }
   }
   .reservation {
-    flex: 1 1 35%;
+    flex: 1 1 20%;
+    display: flex;
+    flex-wrap: wrap;
+    @include RWD($pad) {
+      flex: 1 0 100%;
+      display: block;
+    }
+    @include RWD($pad_horizontal) {
+      flex: 1 1 20%;
+    }
     &__button {
       color: #fff;
       padding: 15px 25px;
       margin-top: 25px;
+      margin-left: auto;
       background-color: $button_color;
       border: none;
       outline: none;

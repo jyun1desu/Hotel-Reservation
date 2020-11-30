@@ -52,6 +52,7 @@ export default {
     height: 2px;
     border-radius: 5px;
     background-color: #fff;
+    transition: all 1s;
 
     &:not(:last-child) {
       margin-bottom: 7px;
@@ -70,6 +71,7 @@ export default {
     }
 
     &.click-active {
+      background-color: #000;
       &:nth-child(1) {
         animation: icon_line_one 0.5s forwards;
       }
