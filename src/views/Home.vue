@@ -243,9 +243,11 @@ main {
         }
       }
       .social_media {
+        text-align: right;
         font-size: 21px;
         @include RWD($pad) {
           margin-bottom: 45px;
+          text-align: left;
         }
 
         a {
@@ -288,14 +290,22 @@ main {
 }
 
 .slide-in-out-enter-active {
-  transition: all 0.3s ease;
+  transform: translateX(100%);
+  opacity: 0.3;
+  transition: all 0.8s ease;
 }
+
+.slide-in-out-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+
 .slide-in-out-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.8s ease;
 }
-.slide-in-out-enter,
+
 .slide-in-out-leave-to {
-  transform: translateX(10px);
-  opacity: 0;
+  transform: translateX(100%);
+  opacity: 0.3;
 }
 </style>
