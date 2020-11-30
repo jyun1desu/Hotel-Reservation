@@ -69,12 +69,12 @@ export default {
     amenities,
     calenderPicker,
   },
-  methods:{
-    toHomePage(){
+  methods: {
+    toHomePage() {
       this.$router.push({
-        name:'Home'
+        name: "Home",
       });
-    }
+    },
   },
   computed: {
     room() {
@@ -107,19 +107,26 @@ $grey_font_color: #6d7278;
 $button_color: #575757;
 .banner {
   width: 100%;
-  height: 85vh;
+  height: 40vh;
+  @include RWD($pad) {
+    height: 85vh;
+  }
   display: flex;
   box-shadow: 0px 1px 10px 3px rgba(0, 0, 0, 0.2);
   position: relative;
   .logo {
     position: absolute;
-    top: 35px;
-    left: 50px;
+    top: 15px;
+    left: 20px;
     cursor: pointer;
     user-select: none;
+    @include RWD($pad) {
+      top: 35px;
+      left: 50px;
+    }
     .shadow {
-      width: 150px;
-      height: 45px;
+      width: 100px;
+      height: 25px;
       clip-path: polygon(0% 0%, 0% 100%, 10% 100%, 10% 20%, 100% 20%, 100% 0%);
       background-image: repeating-linear-gradient(
         45deg,
@@ -128,17 +135,27 @@ $button_color: #575757;
         rgba(255, 255, 255, 0.3) 11px,
         rgba(255, 255, 255, 0.3) 15px
       );
+      @include RWD($pad) {
+        width: 150px;
+        height: 45px;
+      }
     }
     .brand_name {
       position: absolute;
-      left: 14px;
-      top: 8px;
-      font-size: 18px;
+      left: 10px;
+      top: 5px;
+      font-size: 12px;
       letter-spacing: 2px;
-      font-weight: 500;
+      font-weight: 400;
       margin: 0;
-      padding: 10px 16px;
+      padding: 5px 8px;
       border: 1px solid #000;
+      @include RWD($pad) {
+        font-size: 18px;
+        padding: 10px 16px;
+        left: 15px;
+        top: 8px;
+      }
     }
   }
   .main_image {
@@ -165,7 +182,10 @@ $button_color: #575757;
 
 .room_detail {
   display: flex;
-  padding: 50px 60px;
+  padding: 15px 20px;
+    @include RWD($pad) {
+    padding: 50px 60px;
+  }
   box-sizing: border-box;
   .room_info {
     display: flex;

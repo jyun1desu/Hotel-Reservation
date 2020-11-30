@@ -7,7 +7,7 @@
           <h1 class="brand_name">White Space</h1>
         </div>
       </div>
-      <toggleIcon @click="toggleList = !toggleList" />
+      <toggleIcon @click="toggleList = !toggleList" :toggle="toggleList" />
       <transition name="slide-in-out">
         <div class="guide_area" v-if="toggleList">
           <div class="room_guide">
@@ -53,6 +53,15 @@ import BackgroundRoom from "../components/Home/BackgroundRoom.vue";
 import toggleIcon from "../components/Home/toggleIcon.vue";
 export default {
   name: "Home",
+  created() {
+    window.addEventListener("resize", this.windowResize);
+  },
+  mounted(){
+    this.windowResize();
+  },
+  unmounted() {
+    window.removeEventListener("resize", this.windowResize);
+  },
   data() {
     return {
       contact: {
@@ -80,10 +89,17 @@ export default {
           },
         ],
       },
-      toggleList: false,
+      toggleList: null,
     };
   },
   methods: {
+    windowResize() {
+      if(window.innerWidth>768){
+        this.toggleList = true;
+      }else{
+        this.toggleList = false;
+      }
+    },
     toRoomPage() {
       this.$router.push({
         name: "RoomPage",

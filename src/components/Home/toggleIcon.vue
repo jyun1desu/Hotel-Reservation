@@ -13,6 +13,7 @@
 <script>
 export default {
   name: "toggleIcon",
+  prop:['toggle'],
   data() {
     return {
       toggleActive: false,

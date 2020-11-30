@@ -1,13 +1,10 @@
 <template>
- <div id="app">
-   <router-view></router-view>
- </div>
+  <div id="app">
+    <router-view></router-view>
+  </div>
 </template>
 
 <style lang="scss">
-*{
-  // outline: 1px solid pink;
-}
 html,
 body,
 #app {
