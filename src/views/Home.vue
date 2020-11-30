@@ -9,11 +9,12 @@
       </div>
       <div class="guide_area">
         <div class="room_guide">
-          <RoomLink 
-          @toRoomPage="toRoomPage"
-          v-for="room in rooms"
-          :key="room.id"
-          :room="room"/>
+          <RoomLink
+            @toRoomPage="toRoomPage"
+            v-for="room in rooms"
+            :key="room.id"
+            :room="room"
+          />
         </div>
         <div class="contact_information">
           <div class="social_media">
@@ -43,8 +44,8 @@
 </template>
 
 <script>
-import RoomLink from '../components/Home/RoomLink.vue'
-import BackgroundRoom from '../components/Home/BackgroundRoom.vue'
+import RoomLink from "../components/Home/RoomLink.vue";
+import BackgroundRoom from "../components/Home/BackgroundRoom.vue";
 export default {
   name: "Home",
   data() {
@@ -74,14 +75,14 @@ export default {
       },
     };
   },
-  methods:{
-    toRoomPage(){
+  methods: {
+    toRoomPage() {
       this.$router.push({
-        name:'RoomPage'
+        name: "RoomPage",
       });
-    }
+    },
   },
-  components:{
+  components: {
     RoomLink,
     BackgroundRoom,
   },
@@ -179,7 +180,6 @@ main {
           rgba(255, 255, 255, 0.3) 23px
         );
       }
-      
     }
 
     .contact_information {

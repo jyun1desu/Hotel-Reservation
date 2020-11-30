@@ -33,7 +33,7 @@ export default {
     position: relative;
     cursor: pointer;
 
-    &.hover-active {
+    &:hover {
       &::before {
         content: "";
         width: 15px;
