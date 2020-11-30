@@ -27,14 +27,15 @@
             </a>
           </div>
           <div class="contact_ways">
-            <div
+            <a
+              :href="way.link"
               v-for="way in contact.contact_ways"
               :key="way.title"
               :class="way.title"
             >
               <i :class="way.icon"></i>
               <span>{{ way.content }}</span>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -60,11 +61,13 @@ export default {
             title: "phone",
             content: "02-17264937",
             icon: ["fas", "fa-phone-alt"],
+            link: "tel:02-17264937",
           },
           {
             title: "email",
             content: "whitespace@whitespace.com.tw",
             icon: ["fas", "fa-envelope"],
+            link: "mailto:whitespace@whitespace.com.tw",
           },
           {
             title: "address",
@@ -96,6 +99,8 @@ export default {
 
 <style scoped lang="scss">
 main {
+  display: flex;
+  flex-wrap: wrap;
   background: rgba(192, 192, 192, 0.2);
   background-image: linear-gradient(
     180deg,
@@ -105,26 +110,31 @@ main {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  padding: 50px 0 70px 50px;
   position: relative;
   overflow: hidden;
-  display: flex;
-  flex-wrap: wrap;
+  padding: 15px;
+  @include RWD($pad) {
+    padding: 50px 0 70px 50px;
+  }
 }
 
 .navbar {
   flex: 0 0 100%;
   display: flex;
   justify-content: space-between;
-  // align-self: start;
   .logo {
-    user-select: none;
+    flex: 0 0 30%;
     display: inline-block;
+    user-select: none;
     position: relative;
 
     .shadow {
-      width: 150px;
-      height: 150px;
+      width: 70px;
+      height: 70px;
+      @include RWD($pad) {
+        width: 150px;
+        height: 150px;
+      }
       clip-path: polygon(0% 0%, 0% 100%, 10% 100%, 10% 10%, 100% 10%, 100% 0%);
       background-image: repeating-linear-gradient(
         45deg,
@@ -136,69 +146,128 @@ main {
     }
     .brand_box {
       position: absolute;
-      left: 14px;
-      top: 14px;
-      width: 150px;
-      height: 150px;
+      left: 7px;
+      top: 7px;
+      width: 70px;
+      height: 70px;
+      @include RWD($pad) {
+        left: 14px;
+        top: 14px;
+        width: 150px;
+        height: 150px;
+      }
       border: 2px solid white;
       background-color: rgba(255, 255, 255, 0.3);
       display: flex;
       align-items: center;
       .brand_name {
         margin: 0;
-        font-size: 30px;
+        font-size: 17px;
         font-weight: 400;
         color: white;
-        letter-spacing: 3.2px;
+        letter-spacing: 2px;
         text-align: center;
+        @include RWD($pad) {
+          font-size: 30px;
+          letter-spacing: 3.2px;
+        }
       }
     }
   }
 
   .guide_area {
-    display: flex;
+    display: none;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
+    position: absolute;
+    right: 0;
+    @include RWD($pad) {
+      position: relative;
+      justify-content: space-between;
+    }
 
     .room_guide {
-      background-color: #fff;
-      padding: 37px 120px 60px 25px;
+      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.7);
+      padding: 25px 25px 0;
       position: relative;
 
-      &::after {
-        content: "";
-        display: block;
-        position: absolute;
-        top: 100%;
-        width: 100%;
-        height: 20px;
-        background-image: repeating-linear-gradient(
-          45deg,
-          white 16px,
-          white 17px,
-          rgba(255, 255, 255, 0.3) 17px,
-          rgba(255, 255, 255, 0.3) 23px
-        );
+      @include RWD($pad) {
+        background-color: #fff;
+        padding: 37px 120px 60px 25px;
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 100%;
+          width: 100%;
+          height: 20px;
+          background-image: repeating-linear-gradient(
+            45deg,
+            white 16px,
+            white 17px,
+            rgba(255, 255, 255, 0.3) 17px,
+            rgba(255, 255, 255, 0.3) 23px
+          );
+        }
       }
     }
 
     .contact_information {
-      padding-left: 25px;
-      color: #fff;
+      background-color: rgba(255, 255, 255, 0.7);
       font-weight: 300;
+      padding: 0 25px 25px 35px;
+
+      &::before {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 1px;
+        border-top: 1px solid #888;
+        margin: 15px 0;
+      }
+
+      @include RWD($pad) {
+        padding: 0 0 0 25px;
+        color: #fff;
+        background-color: transparent;
+
+        &::before {
+          display: none;
+        }
+      }
       .social_media {
         font-size: 21px;
-        margin-bottom: 45px;
+        @include RWD($pad) {
+          margin-bottom: 45px;
+        }
+
         a {
-          color: #fff;
+          color: #000;
+          @include RWD($pad) {
+            color: #fff;
+          }
           & + a {
             margin-left: 12px;
           }
         }
       }
       .contact_ways {
-        & > div + div {
-          margin-top: 15px;
+        margin-top: 15px;
+        @include RWD($pad) {
+          display: block;
+          margin-top: 0;
+        }
+        & > a {
+          display: block;
+          color: #000;
+          text-decoration: none;
+          @include RWD($pad) {
+            color: #fff;
+          }
+          & + a {
+            margin-top: 15px;
+          }
         }
         i {
           font-size: 18px;

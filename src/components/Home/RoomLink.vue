@@ -20,7 +20,7 @@ export default {
 .link {
   margin-left: 10px;
   & + .link {
-    margin-top: 35px;
+    margin-top: 25px;
   }
 
   a {
