@@ -37,7 +37,6 @@
         :date="day"
         :today="today"
         :current-day="currentDay"
-        class="day"
         v-for="(day, index) in daysOfthisMonth"
         :key="'day' + index"
       ></eachDayButton>
@@ -230,20 +229,6 @@ $day_font_color: #6d7278;
   font-size: 12px;
   @include RWD($pad) {
     font-size: 14px;
-  }
-  .day {
-    padding: 12px;
-    box-sizing: border-box;
-    flex: 0 0 1/7 * 100%;
-    text-align: center;
-    font-family: "roboto", serif;
-    font-weight: 300;
-    @include RWD($pad) {
-      padding: 15px 8px;
-    }
-    &.unclickable {
-      color: #c9ccd0;
-    }
   }
 }
 </style>

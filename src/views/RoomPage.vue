@@ -1,16 +1,31 @@
 <template>
-  <div class="room_page">
+  <div class="room_page" :class="{'showlightbox':showLightbox}">
+    <lightbox 
+    @close="showLightbox=false"
+    v-if="showLightbox"></lightbox>
     <div class="banner">
       <div @click="toHomePage" class="logo">
         <div class="shadow"></div>
         <h1 class="brand_name">WhiteSpace</h1>
       </div>
       <div class="main_image">
-        <img src="../assets/room_example.jpeg" alt="" />
+        <img
+          @click="showLightbox = true"
+          src="../assets/room_example.jpeg"
+          alt=""
+        />
       </div>
       <div class="sub_images">
-        <img src="../assets/example2.jpeg" alt="" />
-        <img src="../assets/example3.jpeg" alt="" />
+        <img
+          @click="showLightbox = true"
+          src="../assets/example2.jpeg"
+          alt=""
+        />
+        <img
+          @click="showLightbox = true"
+          src="../assets/example3.jpeg"
+          alt=""
+        />
       </div>
     </div>
     <div class="room_detail">
@@ -73,11 +88,18 @@
 <script>
 import amenities from "../components/RoomPage/amenities.vue";
 import calenderPicker from "../components/RoomPage/calenderPicker.vue";
+import lightbox from '../components/RoomPage/lightbox.vue'
 export default {
   name: "RoomPage",
+  data() {
+    return {
+      showLightbox: false,
+    };
+  },
   components: {
     amenities,
     calenderPicker,
+    lightbox,
   },
   methods: {
     toHomePage() {
@@ -115,6 +137,15 @@ export default {
 <style scoped lang="scss">
 $grey_font_color: #6d7278;
 $button_color: #575757;
+
+.room_page{
+  &.showlightbox{
+    width: 100%;  
+    height: 100%; 
+    overflow: hidden;
+  }
+}
+
 .banner {
   width: 100%;
   height: 40vh;
