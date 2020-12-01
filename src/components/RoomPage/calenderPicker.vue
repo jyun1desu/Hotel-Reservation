@@ -3,13 +3,26 @@
     <div class="head">
       <span
         @click="toPreviousMonth"
-        :class="{'unclickable':(today.getFullYear()===currentDay.year)&&(today.getMonth()+1===currentDay.month)}"
+        :class="{
+          unclickable:
+            today.getFullYear() === currentDay.year &&
+            today.getMonth() + 1 === currentDay.month,
+        }"
         class="indicator indicator__previous"
       ></span>
       <span class="year_month"
         >{{ currentDay.year }}/{{ currentDay.month }}</span
       >
-      <span @click="toNextMonth" class="indicator indicator__next"></span>
+      <span
+        @click="toNextMonth"
+        :class="{
+          unclickable:
+            currentDay.year === availableMonth.year &&
+            currentDay.month === availableMonth.month,
+        }"
+        class="indicator indicator__next"
+      >
+      </span>
     </div>
     <div class="week">
       <span
@@ -27,16 +40,16 @@
         class="day"
         v-for="(day, index) in daysOfthisMonth"
         :key="'day' + index"
-        ></eachDayButton>
+      ></eachDayButton>
     </div>
   </div>
 </template>
 
 <script>
-import eachDayButton from './eachDayButton.vue'
+import eachDayButton from "./eachDayButton.vue";
 export default {
   name: "calenderPicker",
-  components:{
+  components: {
     eachDayButton,
   },
   created() {
@@ -64,9 +77,9 @@ export default {
   methods: {
     toPreviousMonth() {
       const previousMonth = this.currentDay.month - 1;
-      const thisYear = this.today.getFullYear()===this.currentDay.year;
-      const previousMonthes = previousMonth < this.today.getMonth() + 1
-      if (thisYear&&previousMonthes) return;
+      const thisYear = this.today.getFullYear() === this.currentDay.year;
+      const previousMonthes = previousMonth < this.today.getMonth() + 1;
+      if (thisYear && previousMonthes) return;
       if (previousMonth === 0) {
         this.currentDay = {
           ...this.currentDay,
@@ -82,6 +95,9 @@ export default {
     },
     toNextMonth() {
       const nextMonth = this.currentDay.month + 1;
+      const edgeYear = this.currentDay.year === this.availableMonth.year;
+      const edgeMonth = this.currentDay.month === this.availableMonth.month;
+      if (edgeYear && edgeMonth) return;
       if (nextMonth === 13) {
         this.currentDay = {
           ...this.currentDay,
@@ -115,6 +131,14 @@ export default {
         days.push(i);
       }
       return days;
+    },
+    availableMonth() {
+      const theDayAfter90days = new Date();
+      theDayAfter90days.setDate(theDayAfter90days.getDate() + 90);
+      return {
+        year: theDayAfter90days.getFullYear(),
+        month: theDayAfter90days.getMonth() + 1,
+      };
     },
   },
 };
@@ -160,6 +184,10 @@ $day_font_color: #6d7278;
     text-align: center;
     line-height: 40px;
 
+    &.unclickable {
+      color: #c9ccd0;
+    }
+
     &__previous {
       &::before {
         content: "<";
@@ -167,10 +195,6 @@ $day_font_color: #6d7278;
         font-size: 15px;
         font-family: "Noto Serif TC", serif;
         transform: scaleY(1.5);
-      }
-
-      &.unclickable {
-        color: #c9ccd0;
       }
     }
     &__next {
