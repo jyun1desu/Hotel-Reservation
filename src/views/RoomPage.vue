@@ -359,14 +359,17 @@ $button_color: #575757;
     flex-wrap: wrap;
     @include RWD($pad) {
       flex: 1 0 100%;
-      display: block;
     }
     @include RWD($pad_horizontal) {
+      display: block;
       flex: 1 1 20%;
     }
     &__button {
       color: #fff;
-      padding: 15px 25px;
+      padding: 10px 15px;
+      @include RWD($pad_horizontal) {
+        padding: 15px 25px;
+      }
       margin-top: 25px;
       margin-left: auto;
       background-color: $button_color;
@@ -383,8 +386,8 @@ $button_color: #575757;
         z-index: -1;
         top: 9px;
         left: 8px;
-        width: 120px;
-        height: 50px;
+        width: 100px;
+        height: 40px;
         background-image: repeating-linear-gradient(
           45deg,
           $button_color 11px,
@@ -392,6 +395,11 @@ $button_color: #575757;
           rgba(255, 255, 255, 0.3) 12px,
           rgba(255, 255, 255, 0.3) 15px
         );
+
+        @include RWD($pad_horizontal) {
+          width: 120px;
+          height: 50px;
+        }
       }
     }
   }
