@@ -1,8 +1,14 @@
 <template>
-  <div class="room_page" :class="{'showlightbox':showLightbox}">
-    <lightbox 
-    @close="showLightbox=false"
-    v-if="showLightbox"></lightbox>
+  <div
+    class="room_page"
+    :class="{ unscrollable: showLightbox || showBookingDialogue }"
+  >
+    <lightbox @close="showLightbox = false" v-if="showLightbox"></lightbox>
+    <bookingDialogue
+      v-if="showBookingDialogue"
+      @submit-booking="submitBooking"
+      @cancel-booking="cancelBooking"
+    />
     <div class="banner">
       <div @click="toHomePage" class="logo">
         <div class="shadow"></div>
@@ -79,7 +85,9 @@
       </div>
       <div class="reservation">
         <calenderPicker />
-        <button class="reservation__button">預約時段</button>
+        <button @click="showBookingDialogue = true" class="reservation__button">
+          預約時段
+        </button>
       </div>
     </div>
   </div>
@@ -88,24 +96,33 @@
 <script>
 import amenities from "../components/RoomPage/amenities.vue";
 import calenderPicker from "../components/RoomPage/calenderPicker.vue";
-import lightbox from '../components/RoomPage/lightbox.vue'
+import lightbox from "../components/RoomPage/lightbox.vue";
+import bookingDialogue from "../components/RoomPage/bookingDialogue.vue";
 export default {
   name: "RoomPage",
   data() {
     return {
       showLightbox: false,
+      showBookingDialogue: false,
     };
   },
   components: {
     amenities,
     calenderPicker,
     lightbox,
+    bookingDialogue,
   },
   methods: {
     toHomePage() {
       this.$router.push({
         name: "Home",
       });
+    },
+    submitBooking() {
+      console.log("submit");
+    },
+    cancelBooking() {
+      this.showBookingDialogue = false;
     },
   },
   computed: {
@@ -138,10 +155,10 @@ export default {
 $grey_font_color: #6d7278;
 $button_color: #575757;
 
-.room_page{
-  &.showlightbox{
-    width: 100%;  
-    height: 100%; 
+.room_page {
+  &.unscrollable {
+    width: 100%;
+    height: 100%;
     overflow: hidden;
   }
 }

@@ -71,6 +71,7 @@ export default {
 
   <style lang="scss" scoped>
 .lightbox {
+  user-select: none;
   z-index: 10;
   position: absolute;
   background-color: rgba(0, 0, 0, 0.6);

@@ -14,7 +14,7 @@ export default {
   computed: {
     beforeToday() {
       const sameMonth = this.today.getMonth() + 1 === this.currentDay.month;
-      const beforeToday = this.date < this.currentDay.date;
+      const beforeToday = this.date <= this.currentDay.date;
       return sameMonth && beforeToday;
     },
     moreThan90Days() {
