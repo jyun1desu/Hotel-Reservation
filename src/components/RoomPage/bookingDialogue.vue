@@ -201,8 +201,9 @@ export default {
   },
   watch: {
     "bookingInfo.phone": function (value) {
+      const hasVulue = value.length!==0
       const valid = /^09\d{8}$/.test(value);
-      if (!valid) {
+      if (hasVulue&&!valid) {
         this.inVaildInput.phone = true;
       } else {
         this.inVaildInput.phone = false;
