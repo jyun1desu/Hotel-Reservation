@@ -1,6 +1,26 @@
 <template>
   <div class="now_room">
-    <img :src="displayImage" class="room_background" />
+    <transition>
+      <img
+        :src="nowRoom.imageUrl[0]"
+        v-if="index == 0"
+        class="room_background"
+      />
+    </transition>
+    <transition>
+      <img
+        :src="nowRoom.imageUrl[1]"
+        v-if="index == 1"
+        class="room_background"
+      />
+    </transition>
+    <transition>
+      <img
+        :src="nowRoom.imageUrl[2]"
+        v-if="index == 2"
+        class="room_background"
+      />
+    </transition>
     <div class="now_room_information">
       <div class="room_number">{{ roomNumber }}</div>
       <div class="room_type">{{ nowRoom.name }}</div>
@@ -11,6 +31,21 @@
 <script>
 export default {
   name: "BackgroundRoom",
+  data() {
+    return {
+      index: 0,
+    };
+  },
+  methods: {
+    autoCarousel() {
+      setInterval(() => {
+        this.index++;
+        if (this.index === 3) {
+          this.index = 0;
+        }
+      }, 8000);
+    },
+  },
   computed: {
     nowRoom() {
       return this.$store.state.nowRoom;
@@ -21,10 +56,13 @@ export default {
         roomList.findIndex((room) => room.id === this.nowRoom.id) + 1;
       return `${roomIndex > 9 ? "" : "0"}${roomIndex}`;
     },
-    displayImage() {
-      const imageUrl = this.nowRoom.imageUrl[1];
-      return imageUrl;
-    },
+    // displayImage() {
+    //   const imageUrl = this.nowRoom.imageUrl[this.index];
+    //   return imageUrl;
+    // },
+  },
+  mounted() {
+    this.autoCarousel();
   },
 };
 </script>
@@ -89,5 +127,26 @@ export default {
       }
     }
   }
+}
+
+.v-leave {
+  // opacity: 1;
+}
+.v-leave-active {
+  opacity: 0.5;
+  transition: opacity 2.5s;
+}
+.v-leave-to {
+  opacity: 0;
+}
+.v-enter {
+  opacity: 0.5;
+}
+.v-enter-active {
+  opacity: 0;
+  transition: opacity 2s;
+}
+.v-enter-to {
+  opacity: 1;
 }
 </style>
