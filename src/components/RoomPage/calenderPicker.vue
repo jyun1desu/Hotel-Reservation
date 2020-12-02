@@ -34,6 +34,9 @@
     </div>
     <div class="dates">
       <eachDayButton
+        @book-this-day="$emit('book-this-day', `${currentDay.year}-${currentDay.month}-${day}`)"
+        :booking-info="bookingInfo"
+        :picking-status="pickingStatus"
         :date="day"
         :today="today"
         :current-day="currentDay"
@@ -51,6 +54,7 @@ export default {
   components: {
     eachDayButton,
   },
+  props:["booking-info","picking-status"],
   created() {
     const today = new Date();
     this.today = today;
@@ -138,7 +142,7 @@ export default {
         year: theDayAfter90days.getFullYear(),
         month: theDayAfter90days.getMonth() + 1,
       };
-    },
+    }
   },
 };
 </script>
@@ -157,11 +161,8 @@ $day_font_color: #6d7278;
   background-color: $calender_color;
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
   margin-top: 20px;
-  @include RWD($pad) {
-    margin-top: 40px;
-  }
   @include RWD($pad_horizontal) {
-    margin-top: 0px;
+    margin-top: 20px;
   }
 }
 

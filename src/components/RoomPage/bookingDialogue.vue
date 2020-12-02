@@ -7,9 +7,7 @@
         <div class="line"><span></span></div>
         <div class="line"><span></span></div>
       </div>
-      <form 
-      @submit.prevent="$emit('submit-booking')"
-      class="booking_form">
+      <form @submit.prevent="submitBooking" class="booking_form">
         <div class="name">
           <span class="input_title">姓名</span>
           <input class="input_space" type="text" />
@@ -24,9 +22,29 @@
             <span>起訖</span>
           </span>
           <div class="pickday_inputs">
-            <div class="startday input_space">2020/05/23</div>
-            <div class="dash">～</div>
-            <div class="endday input_space">2020/05/30</div>
+            <div class="input_blocks">
+              <div
+                @click="openCalendar('checkin')"
+                class="startday input_space"
+              >
+                {{ "" || bookingInfo.checkinDay }}
+              </div>
+              <div class="dash">～</div>
+              <div @click="openCalendar('checkout')" class="endday input_space">
+                {{ "" || bookingInfo.checkoutDay }}
+              </div>
+            </div>
+
+            <calenderPicker
+              @book-this-day="handleDayPicking"
+              :booking-info="bookingInfo"
+              :picking-status="pickingStatus"
+              class="picker"
+              v-if="
+                pickingStatus.isPickingCheckinDay ||
+                pickingStatus.isPickingCheckoutDay
+              "
+            />
           </div>
         </div>
         <div class="total_price">
@@ -43,12 +61,14 @@
           <div class="result">NT.2580</div>
         </div>
         <div class="buttons">
-          <button 
-          type="reset"
-          @click.prevent="$emit('cancel-booking')"
-          class="buttons__cancel">取消</button>
-          <button 
-          type="submit" class="buttons__submit">確定預約</button>
+          <button
+            type="reset"
+            @click.prevent="$emit('cancel-booking')"
+            class="buttons__cancel"
+          >
+            取消
+          </button>
+          <button type="submit" class="buttons__submit">確定預約</button>
         </div>
       </form>
     </div>
@@ -56,12 +76,112 @@
 </template>
 
 <script>
+import calenderPicker from "./calenderPicker";
 export default {
   name: "bookingDialogue",
+  components: {
+    calenderPicker,
+  },
+  props: ["start-day"],
+  data() {
+    return {
+      showCalenderPicker: false,
+      bookingInfo: {
+        client: null,
+        phone: null,
+        checkinDay: this.startDay,
+        checkoutDay: null,
+      },
+      pickingStatus: {
+        isPickingCheckinDay: false,
+        isPickingCheckoutDay: false,
+      },
+    };
+  },
+  methods: {
+    openCalendar(day) {
+      if (day === "checkin") {
+        this.pickingStatus = {
+          isPickingCheckinDay: !this.pickingStatus.isPickingCheckinDay,
+          isPickingCheckoutDay: false,
+        };
+        this.bookingInfo = {
+          ...this.bookingInfo,
+          checkinDay: '',
+          checkoutDay: '',
+        };
+      } else {
+        if (!this.bookingInfo.checkinDay || this.isPickingCheckinDay) return;
+        this.pickingStatus = {
+          isPickingCheckinDay: false,
+          isPickingCheckoutDay: !this.pickingStatus.isPickingCheckoutDay,
+        };
+        this.bookingInfo = {
+          ...this.bookingInfo,
+          checkinDay: this.bookingInfo.checkinDay || this.startDay,
+          checkoutDay: null,
+        };
+      }
+    },
+    handleDayPicking(day) {
+      const openFromCheckinInput = this.pickingStatus.isPickingCheckinDay;
+      const checkinDay = this.bookingInfo.checkinDay;
+      if (openFromCheckinInput || !checkinDay) {
+        this.bookingInfo = {
+          ...this.bookingInfo,
+          checkinDay: day,
+          checkoutDay: "",
+        };
+        this.pickingStatus = {
+          isPickingCheckinDay: false,
+          isPickingCheckoutDay: true,
+        };
+      } else {
+        this.bookingInfo = {
+          ...this.bookingInfo,
+          checkoutDay: day,
+        };
+        this.pickingStatus = {
+          isPickingCheckinDay: false,
+          isPickingCheckoutDay: false,
+        };
+      }
+    },
+    submitBooking() {
+      this.$emit("submit-booking", this.bookingInfo);
+      this.bookingInfo = {
+        client: null,
+        phone: null,
+        checkinDay: this.startDay,
+        checkoutDay: null,
+      };
+    },
+    cancelBooking() {
+      this.$emit("cancel-booking");
+      this.bookingInfo = {
+        client: null,
+        phone: null,
+        checkinDay: this.startDay,
+        checkoutDay: null,
+      };
+    },
+    isBefore(day, anotherDay) {
+      const year = day.year > anotherDay.year ? 1 : 0;
+      const month = day.month > anotherDay.month ? 1 : 0;
+      const date = day.date > anotherDay.date ? 1 : 0;
+      if (year + month + date > 0) {
+        console.log(year + month + date);
+        return "ya";
+      } else {
+        console.log(year + month + date);
+        return "no";
+      }
+    },
+  },
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 $input_border_color: #c9c9c9;
 $input_border_radius: 4px;
 $input_height: 25px;
@@ -159,7 +279,7 @@ $cancel_button_font_color: #6d7278;
       border: 1px solid $input_border_color;
       border-radius: $input_border_radius;
       height: $input_height;
-      font-family:"Roboto", sans-serif;
+      font-family: "Roboto", sans-serif;
       font-weight: 300;
       font-size: 12px;
       letter-spacing: 1px;
@@ -169,12 +289,23 @@ $cancel_button_font_color: #6d7278;
     }
 
     .pickday_inputs {
+      position: relative;
       flex: 0 1 70%;
       display: flex;
       flex-direction: column;
       @include RWD($pad) {
         flex-direction: row;
         justify-content: space-between;
+      }
+
+      .input_blocks {
+        flex: 1 1 100%;
+        text-align: center;
+        @include RWD($pad) {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+        }
       }
 
       .dash {
@@ -253,6 +384,23 @@ $cancel_button_font_color: #6d7278;
         color: $cancel_button_font_color;
       }
     }
+  }
+}
+
+.picker {
+  position: absolute;
+  width: 180%;
+  top: 20px;
+  left: -60%;
+  margin-top: 0;
+  @include RWD($pad) {
+    width: 150%;
+    top: 15px;
+    left: 0;
+  }
+
+  .day {
+    padding: 10px;
   }
 }
 </style>

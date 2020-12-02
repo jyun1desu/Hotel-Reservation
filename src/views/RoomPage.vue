@@ -1,6 +1,7 @@
 <template>
   <bookingDialogue
     v-if="showBookingDialogue"
+    :start-day="pickedDay"
     @submit-booking="submitBooking"
     @cancel-booking="cancelBooking"
   />
@@ -82,7 +83,8 @@
         </div>
       </div>
       <div class="reservation">
-        <calenderPicker />
+        <p>顯示近 90 日的房間預訂狀態，劃線代表已被預訂</p>
+        <calenderPicker @book-this-day="bookCertainDay" />
         <button @click="showBookingDialogue = true" class="reservation__button">
           預約時段
         </button>
@@ -102,6 +104,7 @@ export default {
     return {
       showLightbox: false,
       showBookingDialogue: false,
+      pickedDay: "",
     };
   },
   components: {
@@ -116,11 +119,17 @@ export default {
         name: "Home",
       });
     },
+    bookCertainDay(date) {
+      this.showBookingDialogue = true;
+      this.pickedDay = date;
+    },
     submitBooking() {
       console.log("submit");
+      this.pickedDay = "";
     },
     cancelBooking() {
       this.showBookingDialogue = false;
+      this.pickedDay = "";
     },
   },
   computed: {
@@ -415,6 +424,16 @@ $button_color: #575757;
     @include RWD($pad_horizontal) {
       display: block;
       flex: 1 1 20%;
+    }
+    p {
+      font-family: "roboto", sans-serif;
+      margin: 25px 0 0;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      color: $grey_font_color;
+      @include RWD($pad_horizontal) {
+        margin-top: 0;
+      }
     }
     &__button {
       cursor: pointer;

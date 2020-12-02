@@ -1,7 +1,12 @@
 <template>
   <span
+    @click="handleClick"
     class="day"
-    :class="{ unclickable: beforeToday || moreThan90Days, unavailable: date%2===0 }"
+    :class="{
+      unclickable: beforeToday || moreThan90Days || beforeCheckinDay,
+      unavailable: date && unavailableDays,
+      ischeckin: bookingInfo && isCheckinDay,
+    }"
   >
     {{ date }}
   </span>
@@ -10,7 +15,21 @@
 <script>
 export default {
   name: "eachDayButton",
-  props: ["date", "current-day", "today"],
+  props: ["date", "current-day", "today", "booking-info", "picking-status"],
+  methods: {
+    handleClick() {
+      const unavailable = this.date === 0;
+      if (
+        this.beforeToday ||
+        this.moreThan90Days ||
+        unavailable ||
+        this.beforeCheckinDay ||
+        this.isCheckinDay
+      )
+        return;
+      this.$emit("book-this-day");
+    },
+  },
   computed: {
     beforeToday() {
       const sameMonth = this.today.getMonth() + 1 === this.currentDay.month;
@@ -31,11 +50,42 @@ export default {
         return true;
       }
     },
+    unavailableDays() {
+      return !(this.beforeToday || this.moreThan90Days) && this.date === 0;
+    },
+    beforeCheckinDay() {
+      if (this.bookingInfo) {
+        const year = this.bookingInfo.checkinDay.split("-")[0];
+        const month = this.bookingInfo.checkinDay.split("-")[1];
+        const day = this.bookingInfo.checkinDay.split("-")[2];
+        const compareYear = this.currentDay.year <  year;
+        const compareMonth = this.currentDay.month < month;
+        if (compareYear || compareMonth) {
+          return false;
+        } else {
+          return this.date < day;
+        }
+      } else {
+        return false;
+      }
+    },
+    isCheckinDay() {
+      if (this.bookingInfo) {
+        const month = Number(this.bookingInfo.checkinDay.split("-")[1])
+        const sameMonth = this.currentDay.month === month
+        const day = Number(this.bookingInfo.checkinDay.split("-")[2]);
+        const sameDay = day === this.date;
+        return sameMonth && sameDay;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+$day_font_color: #6d7278;
 .day {
   padding: 12px 5px;
   box-sizing: border-box;
@@ -43,8 +93,26 @@ export default {
   text-align: center;
   font-family: "roboto", serif;
   font-weight: 300;
+  position: relative;
   @include RWD($pad) {
     padding: 15px 8px;
+  }
+  &.ischeckin {
+    z-index: 2;
+    color: #fff;
+    &::before {
+      content: "";
+      z-index: -1;
+      display: block;
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: $day_font_color;
+      border-radius: 100%;
+    }
   }
   &.unclickable {
     color: #c9ccd0;
@@ -57,7 +125,7 @@ export default {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       background-image: repeating-linear-gradient(
         45deg,
         #000 7px,
