@@ -1,7 +1,8 @@
 <template>
   <main>
     <nav class="navbar">
-      <div class="logo">
+      <div 
+      class="logo">
         <div class="shadow"></div>
         <div class="brand_box">
           <h1 class="brand_name">White Space</h1>
@@ -145,18 +146,18 @@ main {
   display: flex;
   justify-content: space-between;
   .logo {
-    flex: 0 0 30%;
+    transform: scale(0.4);
+    transform-origin: top left;
+    @include RWD($pad) {
+      transform: scale(1);
+    }
     display: inline-block;
     user-select: none;
     position: relative;
 
     .shadow {
-      width: 70px;
-      height: 70px;
-      @include RWD($pad) {
-        width: 150px;
-        height: 150px;
-      }
+      width: 150px;
+      height: 150px;
       clip-path: polygon(0% 0%, 0% 100%, 10% 100%, 10% 10%, 100% 10%, 100% 0%);
       background-image: repeating-linear-gradient(
         45deg,
@@ -168,31 +169,21 @@ main {
     }
     .brand_box {
       position: absolute;
-      left: 7px;
-      top: 7px;
-      width: 70px;
-      height: 70px;
-      @include RWD($pad) {
-        left: 14px;
-        top: 14px;
-        width: 150px;
-        height: 150px;
-      }
+      left: 14px;
+      top: 14px;
+      width: 150px;
+      height: 150px;
       border: 2px solid white;
       background-color: rgba(255, 255, 255, 0.3);
       display: flex;
       align-items: center;
       .brand_name {
         margin: 0;
-        font-size: 17px;
         font-weight: 400;
         color: white;
-        letter-spacing: 2px;
         text-align: center;
-        @include RWD($pad) {
-          font-size: 30px;
-          letter-spacing: 3.2px;
-        }
+        font-size: 30px;
+        letter-spacing: 3.2px;
       }
     }
   }

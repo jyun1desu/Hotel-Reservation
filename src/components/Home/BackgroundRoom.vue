@@ -32,7 +32,7 @@ export default {
 <style scoped lang="scss">
 .now_room {
   position: absolute;
-  bottom: 40px;
+  bottom: 20px;
   @include RWD($pad) {
     bottom: 70px;
   }

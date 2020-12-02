@@ -413,6 +413,7 @@ $button_color: #575757;
       flex: 1 1 20%;
     }
     &__button {
+      cursor: pointer;
       color: #fff;
       padding: 10px 15px;
       @include RWD($pad_horizontal) {

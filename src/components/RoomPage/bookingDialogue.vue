@@ -86,11 +86,13 @@ $cancel_button_font_color: #6d7278;
 
 .dialogue {
   min-width: 280px;
+  box-sizing: border-box;
   background-color: #fff;
   padding: $form_paddingY/2;
   @include RWD($pad) {
     width: 350px;
     padding: 30px $form_paddingY;
+    box-sizing: content-box;
   }
 
   .title {
