@@ -10,11 +10,22 @@
       <form @submit.prevent="submitBooking" class="booking_form">
         <div class="name">
           <span class="input_title">姓名</span>
-          <input class="input_space" type="text" />
+          <input
+            placeholder="請輸入中文或英文姓名"
+            v-model="bookingInfo.client"
+            class="input_space"
+            type="text"
+          />
         </div>
         <div class="telephone">
           <span class="input_title">電話</span>
-          <input class="input_space" type="text" />
+          <input
+            v-model="bookingInfo.phone"
+            class="input_space"
+            :class="{ warning: inVaildInput.phone }"
+            placeholder="09......."
+            type="text"
+          />
         </div>
         <div class="wantdays">
           <span class="input_title">
@@ -96,6 +107,9 @@ export default {
         isPickingCheckinDay: false,
         isPickingCheckoutDay: false,
       },
+      inVaildInput: {
+        phone: false,
+      },
     };
   },
   methods: {
@@ -107,8 +121,8 @@ export default {
         };
         this.bookingInfo = {
           ...this.bookingInfo,
-          checkinDay: '',
-          checkoutDay: '',
+          checkinDay: "",
+          checkoutDay: "",
         };
       } else {
         if (!this.bookingInfo.checkinDay || this.isPickingCheckinDay) return;
@@ -148,6 +162,13 @@ export default {
       }
     },
     submitBooking() {
+      const clientName = this.bookingInfo.client;
+      const phone = this.bookingInfo.phone;
+      const checkinDay = this.bookingInfo.checkinDay;
+      const checkoutDay = this.bookingInfo.checkoutDay;
+      const validPhoneNumber = /^09\d{8}$/.test(phone);
+      if (!clientName || !validPhoneNumber || !checkinDay || !checkoutDay)
+        return;
       this.$emit("submit-booking", this.bookingInfo);
       this.bookingInfo = {
         client: null,
@@ -175,6 +196,16 @@ export default {
       } else {
         console.log(year + month + date);
         return "no";
+      }
+    },
+  },
+  watch: {
+    "bookingInfo.phone": function (value) {
+      const valid = /^09\d{8}$/.test(value);
+      if (!valid) {
+        this.inVaildInput.phone = true;
+      } else {
+        this.inVaildInput.phone = false;
       }
     },
   },
@@ -241,7 +272,6 @@ $cancel_button_font_color: #6d7278;
       }
     }
   }
-
   .booking_form {
     .name,
     .telephone,
@@ -254,6 +284,17 @@ $cancel_button_font_color: #6d7278;
       }
     }
 
+    .telephone {
+      &.warning {
+        &::before {
+          content: "請輸入正確格式";
+          display: block;
+          background-color: pink;
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
     .wantdays .input_title {
       span {
         display: block;
@@ -285,6 +326,9 @@ $cancel_button_font_color: #6d7278;
       letter-spacing: 1px;
       &:focus {
         outline: none;
+      }
+      &.warning {
+        border: 1px solid red;
       }
     }
 

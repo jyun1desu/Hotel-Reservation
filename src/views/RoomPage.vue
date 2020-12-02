@@ -124,7 +124,6 @@ export default {
       this.pickedDay = date;
     },
     submitBooking() {
-      console.log("submit");
       this.pickedDay = "";
     },
     cancelBooking() {
