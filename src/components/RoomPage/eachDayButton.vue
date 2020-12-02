@@ -18,11 +18,16 @@ export default {
   props: ["date", "current-day", "today", "booking-info", "picking-status"],
   methods: {
     handleClick() {
-      const unavailable = this.date === 0;
+      if (this.pickingStatus) {
+        const noVacancy =
+          this.pickingStatus.isPickingCheckinDay && this.unavailableDays;
+        if (noVacancy) return;
+      } else {
+        if (this.unavailableDays) return;
+      }
       if (
         this.beforeToday ||
         this.moreThan90Days ||
-        unavailable ||
         this.beforeCheckinDay ||
         this.isCheckinDay
       )
@@ -55,15 +60,19 @@ export default {
     },
     beforeCheckinDay() {
       if (this.bookingInfo) {
-        const year = this.bookingInfo.checkinDay.split("-")[0];
-        const month = this.bookingInfo.checkinDay.split("-")[1];
-        const day = this.bookingInfo.checkinDay.split("-")[2];
-        const compareYear = this.currentDay.year <  year;
-        const compareMonth = this.currentDay.month < month;
-        if (compareYear || compareMonth) {
-          return false;
-        } else {
+        const year = Number(this.bookingInfo.checkinDay.split("-")[0]);
+        const month = Number(this.bookingInfo.checkinDay.split("-")[1]);
+        const day = Number(this.bookingInfo.checkinDay.split("-")[2]);
+        const calendarYear = Number(this.currentDay.year);
+        const calendarMonth = Number(this.currentDay.month);
+        if (calendarYear < year) {
+          return true;
+        } else if (calendarYear <= year && calendarMonth < month) {
+          return true;
+        } else if (calendarYear === year && calendarMonth === month) {
           return this.date < day;
+        } else{
+          return false;
         }
       } else {
         return false;
@@ -71,8 +80,8 @@ export default {
     },
     isCheckinDay() {
       if (this.bookingInfo) {
-        const month = Number(this.bookingInfo.checkinDay.split("-")[1])
-        const sameMonth = this.currentDay.month === month
+        const month = Number(this.bookingInfo.checkinDay.split("-")[1]);
+        const sameMonth = this.currentDay.month === month;
         const day = Number(this.bookingInfo.checkinDay.split("-")[2]);
         const sameDay = day === this.date;
         return sameMonth && sameDay;
