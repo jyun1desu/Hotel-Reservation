@@ -4,7 +4,6 @@ import {
 
 export default createStore({
   state: {
-    "success": true,
     "items": [{
         "id": "3Elqe8kfMxdZv5xFLV4OUeN6jhmxIvQSTyj4eTgIowfIRvF4rerA2Nuegzc2Rgwu",
         "imageUrl": "https://images.unsplash.com/photo-1551776235-dde6d482980b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80",
@@ -48,6 +47,7 @@ export default createStore({
         "name": "Deluxe Twin Room"
       }
     ],
+    "allRooms":[],
     "nowRoom": {
       "id": "kICyWhZ5XsfI4n1d4gBOsDjIyIxNozwgmxYKyZpzi5pjLcU2Nl4RhiGrn6zaPuTJ",
       "name": "Deluxe Double Room",

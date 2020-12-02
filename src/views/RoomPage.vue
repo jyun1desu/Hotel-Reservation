@@ -1,14 +1,12 @@
 <template>
-  <div
-    class="room_page"
-    :class="{ unscrollable: showLightbox || showBookingDialogue }"
-  >
+  <bookingDialogue
+    v-if="showBookingDialogue"
+    @submit-booking="submitBooking"
+    @cancel-booking="cancelBooking"
+  />
+  <div class="room_page">
+    <div v-if="showLightbox || showBookingDialogue" class="mask"></div>
     <lightbox @close="showLightbox = false" v-if="showLightbox"></lightbox>
-    <bookingDialogue
-      v-if="showBookingDialogue"
-      @submit-booking="submitBooking"
-      @cancel-booking="cancelBooking"
-    />
     <div class="banner">
       <div @click="toHomePage" class="logo">
         <div class="shadow"></div>
@@ -156,11 +154,17 @@ $grey_font_color: #6d7278;
 $button_color: #575757;
 
 .room_page {
-  &.unscrollable {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
+  position: relative;
+}
+
+.mask {
+  position: absolute;
+  z-index: 9;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .banner {

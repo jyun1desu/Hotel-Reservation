@@ -73,8 +73,7 @@ export default {
 .lightbox {
   user-select: none;
   z-index: 10;
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
   width: 100%;
   height: 100%;
   display: flex;
