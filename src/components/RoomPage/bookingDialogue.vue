@@ -62,14 +62,14 @@
           <div class="calculation">
             <div class="weekday">
               <span>平日時段</span>
-              <span>1夜</span>
+              <span>{{holidayAndNormal.normalDay}}夜</span>
             </div>
             <div class="weekend">
               <span>假日時段</span>
-              <span>1夜</span>
+              <span>{{holidayAndNormal.holiday}}夜</span>
             </div>
           </div>
-          <div class="result">NT.2580</div>
+          <div class="result">NT.{{ countPrice }}</div>
         </div>
         <div class="buttons">
           <button
@@ -207,6 +207,57 @@ export default {
       } else {
         this.inVaildInput.phone = false;
       }
+    },
+  },
+  computed: {
+    livingDates() {
+      const checkinDay = new Date(this.bookingInfo.checkinDay);
+      const checkoutDay = new Date(this.bookingInfo.checkoutDay);
+      const dayAmount = parseInt(
+        Math.abs(checkinDay - checkoutDay) / 1000 / 60 / 60 / 24
+      );
+      const livingDaysArray = [];
+      for (let i = 0; i < dayAmount; i++) {
+        const checkinDay = new Date(this.bookingInfo.checkinDay);
+        const time = checkinDay.setDate(checkinDay.getDate() + i);
+        const day = new Date(time);
+        const dayInFormat = `${day.getFullYear()}-${
+          day.getMonth() + 1
+        }-${day.getDate()}`;
+        livingDaysArray.push(dayInFormat);
+      }
+      return livingDaysArray;
+    },
+    countWeekDay() {
+      if (!this.bookingInfo.checkoutDay) return;
+      const weekArray = this.livingDates.map((day) => {
+        const year = day.split("-")[0];
+        const month = day.split("-")[1];
+        const date = day.split("-")[2];
+        const weekday = new Date(`${year}/${month}/${date}`).getDay();
+        return weekday;
+      });
+      return weekArray;
+    },
+    holidayAndNormal(){
+      if(!this.bookingInfo.checkinDay||!this.bookingInfo.checkoutDay) return 0;
+      const holiday = this.countWeekDay.filter(day=>day===0||day===6).length
+      const normalDay = this.countWeekDay.filter(day=>day!==0&&day!==6).length
+      return{holiday,normalDay}
+    },
+    countPrice() {
+      if (!this.bookingInfo.checkoutDay) return 0;
+      const holidayPrice = 2000;
+      const normalPrice = 1000;
+      const totalPrice = this.countWeekDay.reduce((a, b) => {
+        if (b == 0 || b == 6) {
+          b = holidayPrice;
+        } else {
+          b = normalPrice;
+        }
+        return a + b;
+      }, 0);
+      return totalPrice;
     },
   },
 };

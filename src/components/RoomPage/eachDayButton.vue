@@ -56,7 +56,7 @@ export default {
       }
     },
     unavailableDays() {
-      return !(this.beforeToday || this.moreThan90Days) && this.date === 0;
+      return !(this.beforeToday || this.moreThan90Days) && this.date%4 === 0;
     },
     beforeCheckinDay() {
       if (this.bookingInfo) {
