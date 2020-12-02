@@ -34,7 +34,7 @@
     </div>
     <div class="dates">
       <eachDayButton
-        @book-this-day="$emit('book-this-day', `${currentDay.year}-${currentDay.month}-${day}`)"
+        @book-this-day="$emit('book-this-day', `${currentDay.year}-${currentDay.month<10?`0${currentDay.month}`:`${currentDay.month}`}-${day<10?`0${day}`:`${day}`}`)"
         :booking-info="bookingInfo"
         :picking-status="pickingStatus"
         :date="day"
