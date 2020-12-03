@@ -153,6 +153,9 @@ export default {
 
       return { checkInTime, checkOutTime };
     },
+    nowRoomss(){
+      return this.$store.state.nowRoomss
+    }
   },
 };
 </script>

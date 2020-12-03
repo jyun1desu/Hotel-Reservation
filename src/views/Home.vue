@@ -13,11 +13,14 @@
         <div class="guide_area" v-if="toggleList">
           <div class="room_guide">
             <RoomLink
-              @toRoomPage="toRoomPage"
-              v-for="room in rooms"
+              @hover-room="hoverOnRoom"
+              @hover-leave="stopCarousel = false"
+              @to-room-page="toRoomPage"
+              :index="index"
+              v-for="(room,index) in rooms"
               :key="room.id"
               :room="room"
-            />
+            ></RoomLink>
           </div>
           <div class="contact_information">
             <div class="social_media">
@@ -44,7 +47,9 @@
         </div>
       </transition>
     </nav>
-    <BackgroundRoom />
+    <BackgroundRoom 
+    :stop-carousel="stopCarousel"
+    :room-index="nowRoomIndex"/>
   </main>
 </template>
 
@@ -91,6 +96,8 @@ export default {
         ],
       },
       toggleList: null,
+      nowRoomIndex: 0,
+      stopCarousel: false,
     };
   },
   methods: {
@@ -106,6 +113,12 @@ export default {
         name: "RoomPage",
       });
     },
+    hoverOnRoom(roomIndex){
+      this.stopCarousel = true;
+      this.nowRoomIndex = roomIndex;
+      // this.$store.commit()
+
+    },
   },
   components: {
     RoomLink,
@@ -114,7 +127,7 @@ export default {
   },
   computed: {
     rooms() {
-      return this.$store.state.items;
+      return this.$store.state.allRooms;
     },
   },
 };

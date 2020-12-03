@@ -1,25 +1,22 @@
 <template>
   <div class="now_room">
     <transition>
-      <img
-        :src="nowRoom.imageUrl[0]"
-        v-if="index == 0"
-        class="room_background"
-      />
+      <img :src="displayImage" v-if="index == 0" class="room_background" />
     </transition>
     <transition>
-      <img
-        :src="nowRoom.imageUrl[1]"
-        v-if="index == 1"
-        class="room_background"
-      />
+      <img :src="displayImage" v-if="index == 1" class="room_background" />
     </transition>
     <transition>
-      <img
-        :src="nowRoom.imageUrl[2]"
-        v-if="index == 2"
-        class="room_background"
-      />
+      <img :src="displayImage" v-if="index == 2" class="room_background" />
+    </transition>
+    <transition>
+      <img :src="displayImage" v-if="index == 3" class="room_background" />
+    </transition>
+    <transition>
+      <img :src="displayImage" v-if="index == 4" class="room_background" />
+    </transition>
+    <transition>
+      <img :src="displayImage" v-if="index == 5" class="room_background" />
     </transition>
     <div class="now_room_information">
       <div class="room_number">{{ roomNumber }}</div>
@@ -31,6 +28,7 @@
 <script>
 export default {
   name: "BackgroundRoom",
+  props:['stop-carousel','room-index'],
   data() {
     return {
       index: 0,
@@ -38,28 +36,40 @@ export default {
   },
   methods: {
     autoCarousel() {
-      setInterval(() => {
+      this.carousel = setInterval(() => {
         this.index++;
-        if (this.index === 3) {
+        if (this.index === 6) {
           this.index = 0;
         }
-      }, 8000);
+      }, 5000);
     },
   },
+  watch:{
+    stopCarousel:function(stop){
+      if(stop){
+        clearInterval(this.carousel)
+        this.index = this.roomIndex;
+      }else{
+        this.autoCarousel();
+      }
+    }
+  },
   computed: {
+    rooms() {
+      return this.$store.state.allRooms;
+    },
     nowRoom() {
-      return this.$store.state.nowRoom;
+      return this.rooms[this.index];
     },
     roomNumber() {
-      const roomList = this.$store.state.items;
       const roomIndex =
-        roomList.findIndex((room) => room.id === this.nowRoom.id) + 1;
+        this.rooms.findIndex((room) => room.id === this.nowRoom.id) + 1;
       return `${roomIndex > 9 ? "" : "0"}${roomIndex}`;
     },
-    // displayImage() {
-    //   const imageUrl = this.nowRoom.imageUrl[this.index];
-    //   return imageUrl;
-    // },
+    displayImage() {
+      const imageUrl = this.nowRoom.imageUrl;
+      return imageUrl;
+    },
   },
   mounted() {
     this.autoCarousel();

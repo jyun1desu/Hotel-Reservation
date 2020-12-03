@@ -2,6 +2,8 @@
   <div class="link">
     <a 
     class="guide_link"
+    @mouseenter="$emit('hover-room',index)"
+    @mouseleave="$emit('hover-leave')"
     @click="$emit('to-room-page')">{{room.name}}</a>
     <div class="detail_infomation"></div>
   </div>
@@ -12,6 +14,7 @@ export default {
   name: "RoomLink",
   props: {
     room: Object,
+    index: Number,
   },
 };
 </script>
