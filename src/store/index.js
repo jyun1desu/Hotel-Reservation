@@ -7,6 +7,7 @@ export default createStore({
   state: {
     allRooms:[],
     nowRoom: {},
+    nowRoomBookingDays:[],
   },
   getters: {
   },
@@ -16,6 +17,9 @@ export default createStore({
     },
     setNowRoomData(state,roomData){
       state.nowRoom = roomData.room[0];
+    },
+    setNowBookingDays(state,roomData){
+      state.nowRoomBookingDays = roomData.booking;
     },
   },
   actions: {
@@ -29,8 +33,9 @@ export default createStore({
     },
     async getNowRoomData({commit},roomID){
       try{
-        const response = await API.get(`room/${roomID}`)
-        commit('setNowRoomData',response.data)
+        const response = await API.get(`room/${roomID}`);
+        commit('setNowRoomData',response.data);
+        commit('setNowBookingDays',response.data)
       }catch(e){
         console.log(e)
       }

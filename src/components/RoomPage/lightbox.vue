@@ -41,14 +41,10 @@
 export default {
   name: "lightbox",
   components: {},
+  props:['images','show-index'],
   data() {
     return {
-      nowImageIndex: 0,
-      images: [
-        require("../../assets/room_example.jpeg"),
-        require("../../assets/example2.jpeg"),
-        require("../../assets/example3.jpeg"),
-      ],
+      nowImageIndex: this.showIndex,
     };
   },
   methods: {

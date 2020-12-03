@@ -14,12 +14,11 @@ const routes = [
     }
   },
   {
-    path: '/room',
+    path: '/room/:roomId',
     name: 'RoomPage',
     component: () => import(/* webpackChunkName: "about" */ '../views/RoomPage.vue'),
-    async beforeEnter(to,from,next){
-      const roomID = store.state.allRooms[0].id
-      await store.dispatch('getNowRoomData',roomID);
+    async beforeEnter(routerTo,from,next){
+      await store.dispatch('getNowRoomData',routerTo.params.roomId);
       next();
     }
   }

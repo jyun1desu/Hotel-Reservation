@@ -108,16 +108,15 @@ export default {
         this.toggleList = false;
       }
     },
-    toRoomPage() {
+    toRoomPage(roomId) {
       this.$router.push({
         name: "RoomPage",
+        params: { roomId: roomId }
       });
     },
     hoverOnRoom(roomIndex){
       this.stopCarousel = true;
       this.nowRoomIndex = roomIndex;
-      // this.$store.commit()
-
     },
   },
   components: {

@@ -4,7 +4,7 @@
     class="guide_link"
     @mouseenter="$emit('hover-room',index)"
     @mouseleave="$emit('hover-leave')"
-    @click="$emit('to-room-page')">{{room.name}}</a>
+    @click="$emit('to-room-page',room.id)">{{room.name}}</a>
     <div class="detail_infomation"></div>
   </div>
 </template>

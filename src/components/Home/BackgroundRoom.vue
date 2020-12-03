@@ -28,7 +28,7 @@
 <script>
 export default {
   name: "BackgroundRoom",
-  props:['stop-carousel','room-index'],
+  props: ["stop-carousel", "room-index"],
   data() {
     return {
       index: 0,
@@ -44,15 +44,15 @@ export default {
       }, 5000);
     },
   },
-  watch:{
-    stopCarousel:function(stop){
-      if(stop){
-        clearInterval(this.carousel)
+  watch: {
+    stopCarousel: function (stop) {
+      if (stop) {
+        clearInterval(this.carousel);
         this.index = this.roomIndex;
-      }else{
+      } else {
         this.autoCarousel();
       }
-    }
+    },
   },
   computed: {
     rooms() {
@@ -73,6 +73,9 @@ export default {
   },
   mounted() {
     this.autoCarousel();
+  },
+  unmounted(){
+    clearInterval(this.carousel)
   },
 };
 </script>

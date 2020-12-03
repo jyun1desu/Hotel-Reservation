@@ -7,7 +7,11 @@
   />
   <div class="room_page">
     <div v-if="showLightbox || showBookingDialogue" class="mask"></div>
-    <lightbox @close="showLightbox = false" v-if="showLightbox"></lightbox>
+    <lightbox 
+    :show-index="showImageIndex"
+    :images="roomImages"
+    @close="showLightbox = false"
+    v-if="showLightbox"></lightbox>
     <div class="banner">
       <div @click="toHomePage" class="logo">
         <div class="shadow"></div>
@@ -15,20 +19,20 @@
       </div>
       <div class="main_image">
         <img
-          @click="showLightbox = true"
-          src="../assets/room_example.jpeg"
+          @click="showLightbox = true;showImageIndex=0"
+          :src="roomImages[0]"
           alt=""
         />
       </div>
       <div class="sub_images">
         <img
-          @click="showLightbox = true"
-          src="../assets/example2.jpeg"
+          @click="showLightbox = true;showImageIndex=1"
+          :src="roomImages[1]"
           alt=""
         />
         <img
-          @click="showLightbox = true"
-          src="../assets/example3.jpeg"
+          @click="showLightbox = true;showImageIndex=2"
+          :src="roomImages[2]"
           alt=""
         />
       </div>
@@ -102,6 +106,7 @@ export default {
   name: "RoomPage",
   data() {
     return {
+      showImageIndex:null,
       showLightbox: false,
       showBookingDialogue: false,
       pickedDay: "",
@@ -153,8 +158,9 @@ export default {
 
       return { checkInTime, checkOutTime };
     },
-    nowRoomss(){
-      return this.$store.state.nowRoomss
+    roomImages(){
+      const newArray = [this.room.imageUrl[1],this.room.imageUrl[0],this.room.imageUrl[2]]
+      return newArray
     }
   },
 };
