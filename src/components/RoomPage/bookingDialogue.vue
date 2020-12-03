@@ -306,9 +306,8 @@ $cancel_button_font_color: #6d7278;
   display: flex;
   justify-content: center;
   align-items: center;
-}
 
-.dialogue {
+  .dialogue {
   min-width: 280px;
   box-sizing: border-box;
   background-color: #fff;
@@ -503,6 +502,7 @@ $cancel_button_font_color: #6d7278;
       }
     }
   }
+}
 }
 
 .picker {

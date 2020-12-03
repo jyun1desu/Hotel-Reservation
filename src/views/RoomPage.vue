@@ -5,8 +5,11 @@
     @submit-booking="submitBooking"
     @cancel-booking="cancelBooking"
   />
+  <bookingResultDialogue
+    v-if="true"
+  />
   <div class="room_page">
-    <div v-if="showLightbox || showBookingDialogue" class="mask"></div>
+    <div v-if="showLightbox || showBookingDialogue || true" class="mask"></div>
     <lightbox 
     :show-index="showImageIndex"
     :images="roomImages"
@@ -102,6 +105,7 @@ import amenities from "../components/RoomPage/amenities.vue";
 import calenderPicker from "../components/RoomPage/calenderPicker.vue";
 import lightbox from "../components/RoomPage/lightbox.vue";
 import bookingDialogue from "../components/RoomPage/bookingDialogue.vue";
+import bookingResultDialogue from '../components/RoomPage/bookingResultDialogue';
 export default {
   name: "RoomPage",
   data() {
@@ -117,6 +121,7 @@ export default {
     calenderPicker,
     lightbox,
     bookingDialogue,
+    bookingResultDialogue,
   },
   methods: {
     toHomePage() {
@@ -143,7 +148,7 @@ export default {
     },
     shortDescription() {
       const d = this.room.descriptionShort;
-      const guestRange = `${d.GuestMin}～${d.GuestMax}`;
+      const guestRange = d.GuestMin==d.GuestMax?d.GuestMin:`${d.GuestMin}～${d.GuestMax}`;
       const bedType = d.Bed[0];
       const bedAmount = d.Bed.length;
       const bedInfo = `${bedType} × ${bedAmount}`;
