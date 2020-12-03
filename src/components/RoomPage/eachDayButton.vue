@@ -3,7 +3,8 @@
     @click="handleClick"
     class="day"
     :class="{
-      unclickable: beforeToday || moreThan90Days || beforeCheckinDay,
+      unclickable:
+        beforeToday || moreThan90Days || beforeCheckinDay || afterMustCheckoutDay,
       unavailable: date && unavailableDays,
       ischeckin: bookingInfo && isCheckinDay,
     }"
@@ -29,7 +30,8 @@ export default {
         this.beforeToday ||
         this.moreThan90Days ||
         this.beforeCheckinDay ||
-        this.isCheckinDay
+        this.isCheckinDay ||
+        this.afterMustCheckoutDay
       )
         return;
       this.$emit("book-this-day");
@@ -55,8 +57,18 @@ export default {
         return true;
       }
     },
+    alreadyBooked() {
+      const bookDays = this.$store.state.nowRoomBookingDays;
+      const month =
+        this.currentDay.month < 10
+          ? `0${this.currentDay.month}`
+          : this.currentDay.month;
+      const date = this.date < 10 ? `0${this.date}` : this.date;
+      const thisDay = `${this.currentDay.year}-${month}-${date}`;
+      return bookDays.some((booked) => booked.date === thisDay);
+    },
     unavailableDays() {
-      return !(this.beforeToday || this.moreThan90Days) && this.date%4 === 0;
+      return !(this.beforeToday || this.moreThan90Days) && this.alreadyBooked;
     },
     beforeCheckinDay() {
       if (this.bookingInfo) {
@@ -71,7 +83,7 @@ export default {
           return true;
         } else if (calendarYear === year && calendarMonth === month) {
           return this.date < day;
-        } else{
+        } else {
           return false;
         }
       } else {
@@ -85,6 +97,25 @@ export default {
         const day = Number(this.bookingInfo.checkinDay.split("-")[2]);
         const sameDay = day === this.date;
         return sameMonth && sameDay;
+      } else {
+        return false;
+      }
+    },
+    afterMustCheckoutDay() {
+      const isBooking = this.pickingStatus || false;
+      if (isBooking.isPickingCheckoutDay) {
+        const day = `${this.currentDay.year}-${this.currentDay.month}-${this.date}`
+        const thisDay = new Date(day).getTime();
+        const checkinDay = new Date(this.bookingInfo.checkinDay).getTime();
+        const bookDays = this.$store.state.nowRoomBookingDays;
+        const bookedArray = bookDays
+          .some((booked) => {
+            const bookedDay = new Date(booked.date).getTime();
+            const afterCheckin = bookedDay-checkinDay>0
+            const beforeThisDay = bookedDay-thisDay<0
+            return afterCheckin&&beforeThisDay;
+          })
+        return bookedArray;
       } else {
         return false;
       }

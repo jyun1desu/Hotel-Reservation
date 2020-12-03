@@ -129,6 +129,7 @@ export default {
       this.pickedDay = date;
     },
     submitBooking() {
+      this.showBookingDialogue = false;
       this.pickedDay = "";
     },
     cancelBooking() {
@@ -445,6 +446,7 @@ $button_color: #575757;
     }
     &__button {
       cursor: pointer;
+      user-select: none;
       color: #fff;
       padding: 10px 15px;
       @include RWD($pad_horizontal) {

@@ -62,11 +62,11 @@
           <div class="calculation">
             <div class="weekday">
               <span>平日時段</span>
-              <span>{{holidayAndNormal.normalDay}}夜</span>
+              <span>{{ holidayAndNormal.normalDay }}夜</span>
             </div>
             <div class="weekend">
               <span>假日時段</span>
-              <span>{{holidayAndNormal.holiday}}夜</span>
+              <span>{{ holidayAndNormal.holiday }}夜</span>
             </div>
           </div>
           <div class="result">NT.{{ countPrice }}</div>
@@ -169,12 +169,18 @@ export default {
       const validPhoneNumber = /^09\d{8}$/.test(phone);
       if (!clientName || !validPhoneNumber || !checkinDay || !checkoutDay)
         return;
-      this.$emit("submit-booking", this.bookingInfo);
+      const roomID = this.nowRoom.id;
+      const info = this.bookingInfoSend;
+      this.$store.dispatch('postNewBooking',{
+        roomID:roomID,
+        bookingInfo:info,
+        })
+      this.$emit("submit-booking");
       this.bookingInfo = {
-        client: null,
-        phone: null,
+        client: "",
+        phone: "",
         checkinDay: this.startDay,
-        checkoutDay: null,
+        checkoutDay: "",
       };
     },
     cancelBooking() {
@@ -201,9 +207,9 @@ export default {
   },
   watch: {
     "bookingInfo.phone": function (value) {
-      const hasVulue = value.length!==0
+      const hasVulue = value.length !== 0;
       const valid = /^09\d{8}$/.test(value);
-      if (hasVulue&&!valid) {
+      if (hasVulue && !valid) {
         this.inVaildInput.phone = true;
       } else {
         this.inVaildInput.phone = false;
@@ -222,9 +228,10 @@ export default {
         const checkinDay = new Date(this.bookingInfo.checkinDay);
         const time = checkinDay.setDate(checkinDay.getDate() + i);
         const day = new Date(time);
-        const dayInFormat = `${day.getFullYear()}-${
-          day.getMonth() + 1
-        }-${day.getDate()}`;
+        const year = day.getFullYear();
+        const month = (day.getMonth()+1)<10?`0${day.getMonth()+1}`:`${day.getMonth()+1}`;
+        const date = day.getDate()<10?`0${day.getDate()}`:`${day.getDate()}`;
+        const dayInFormat = `${year}-${month}-${date}`;
         livingDaysArray.push(dayInFormat);
       }
       return livingDaysArray;
@@ -240,11 +247,15 @@ export default {
       });
       return weekArray;
     },
-    holidayAndNormal(){
-      if(!this.bookingInfo.checkinDay||!this.bookingInfo.checkoutDay) return 0;
-      const holiday = this.countWeekDay.filter(day=>day===0||day===6).length
-      const normalDay = this.countWeekDay.filter(day=>day!==0&&day!==6).length
-      return{holiday,normalDay}
+    holidayAndNormal() {
+      if (!this.bookingInfo.checkinDay || !this.bookingInfo.checkoutDay)
+        return 0;
+      const holiday = this.countWeekDay.filter((day) => day === 0 || day === 6)
+        .length;
+      const normalDay = this.countWeekDay.filter(
+        (day) => day !== 0 && day !== 6
+      ).length;
+      return { holiday, normalDay };
     },
     countPrice() {
       if (!this.bookingInfo.checkoutDay) return 0;
@@ -260,6 +271,17 @@ export default {
       }, 0);
       return totalPrice;
     },
+    bookingInfoSend() {
+      const info = {
+        name: this.bookingInfo.client,
+        tel: this.bookingInfo.phone,
+        date: this.livingDates,
+      };
+      return JSON.stringify(info);
+    },
+    nowRoom(){
+      return this.$store.state.nowRoom
+    }
   },
 };
 </script>

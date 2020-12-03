@@ -34,7 +34,16 @@
     </div>
     <div class="dates">
       <eachDayButton
-        @book-this-day="$emit('book-this-day', `${currentDay.year}-${currentDay.month<10?`0${currentDay.month}`:`${currentDay.month}`}-${day<10?`0${day}`:`${day}`}`)"
+        @book-this-day="
+          $emit(
+            'book-this-day',
+            `${currentDay.year}-${
+              currentDay.month < 10
+                ? `0${currentDay.month}`
+                : `${currentDay.month}`
+            }-${day < 10 ? `0${day}` : `${day}`}`
+          )
+        "
         :booking-info="bookingInfo"
         :picking-status="pickingStatus"
         :date="day"
@@ -54,7 +63,7 @@ export default {
   components: {
     eachDayButton,
   },
-  props:["booking-info","picking-status"],
+  props: ["booking-info", "picking-status"],
   created() {
     const today = new Date();
     this.today = today;
@@ -142,7 +151,10 @@ export default {
         year: theDayAfter90days.getFullYear(),
         month: theDayAfter90days.getMonth() + 1,
       };
-    }
+    },
+    bookingList() {
+      return this.$store.state.nowRoomBookingDays;
+    },
   },
 };
 </script>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const token = 'DnIzKEiHHdIYCLTBo6i66cNBIPQPg8MUBwTjCsWaSX9yHJWz94z6frRgQecq';
+const token = 'cEzY6UqsaAueReUGGEh7k5FBz2xDiMFHvHxZKn3q3EQjCd61nI9ytp8NT0wo';
 
 const hotelAPI = axios.create({
     baseURL: 'https://challenge.thef2e.com/api/thef2e2019/stage6/',
