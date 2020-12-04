@@ -50,6 +50,7 @@
               @book-this-day="handleDayPicking"
               :booking-info="bookingInfo"
               :picking-status="pickingStatus"
+              :checkout-calendar="checkoutCalendar"
               class="picker"
               v-if="
                 pickingStatus.isPickingCheckinDay ||
@@ -90,7 +91,10 @@
       <div></div>
     </div>
     <bookingResult
-      @close-booking="$emit('close-booking');bookingInfoIsSend=false"
+      @close-booking="
+        $emit('close-booking');
+        bookingInfoIsSend = false;
+      "
       v-if="gotBookingResult"
     />
   </div>
@@ -108,6 +112,7 @@ export default {
   props: ["start-day"],
   data() {
     return {
+      checkoutCalendar: null,
       bookingInfoIsSend: false,
       showCalenderPicker: false,
       bookingInfo: {
@@ -224,6 +229,21 @@ export default {
         this.inVaildInput.phone = true;
       } else {
         this.inVaildInput.phone = false;
+      }
+    },
+    "pickingStatus.isPickingCheckoutDay": function (isPickCheckout) {
+      if (isPickCheckout) {
+        const day = this.bookingInfo.checkinDay;
+        const year = Number(day.split("-")[0]);
+        const month = Number(day.split("-")[1]);
+        this.checkoutCalendar = {
+          year,
+          month,
+          date: 1,
+          day: new Date(`${year}/${month}/1`).getDay(),
+        };
+      }else{
+        this.checkoutCalendar=null
       }
     },
   },

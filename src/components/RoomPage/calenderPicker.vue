@@ -63,7 +63,7 @@ export default {
   components: {
     eachDayButton,
   },
-  props: ["booking-info", "picking-status"],
+  props: ["booking-info", "picking-status", "checkout-calendar"],
   created() {
     const today = new Date();
     this.today = today;
@@ -73,6 +73,9 @@ export default {
       date: today.getDate(),
       day: today.getDay(),
     };
+    if (this.checkoutCalendar) {
+      this.currentDay = { ...this.checkoutCalendar };
+    }
   },
   data() {
     return {
@@ -155,22 +158,20 @@ export default {
     bookingList() {
       return this.$store.state.nowRoomBookingDays;
     },
-    currentCalender(){
-      if(!this.bookingInfo) return this.currentDay
-      if(!this.bookingInfo.checkinDay) return this.currentDay
+    currentCalender() {
+      if (!this.bookingInfo) return this.currentDay;
+      if (!this.bookingInfo.checkinDay) return this.currentDay;
       const day = this.bookingInfo.checkinDay;
-      const year = Number(day.split('-')[0]);
-      const month = Number(day.split('-')[1]);
+      const year = Number(day.split("-")[0]);
+      const month = Number(day.split("-")[1]);
       const current = {
         year,
         month,
         date: 1,
-        day: new Date(
-        `${year}/${month}/1`
-      ).getDay()
-      }
-      return current
-    }
+        day: new Date(`${year}/${month}/1`).getDay(),
+      };
+      return current;
+    },
   },
 };
 </script>
