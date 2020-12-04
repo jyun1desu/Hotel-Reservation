@@ -155,6 +155,22 @@ export default {
     bookingList() {
       return this.$store.state.nowRoomBookingDays;
     },
+    currentCalender(){
+      if(!this.bookingInfo) return this.currentDay
+      if(!this.bookingInfo.checkinDay) return this.currentDay
+      const day = this.bookingInfo.checkinDay;
+      const year = Number(day.split('-')[0]);
+      const month = Number(day.split('-')[1]);
+      const current = {
+        year,
+        month,
+        date: 1,
+        day: new Date(
+        `${year}/${month}/1`
+      ).getDay()
+      }
+      return current
+    }
   },
 };
 </script>
