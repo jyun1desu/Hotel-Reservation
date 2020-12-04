@@ -11,12 +11,19 @@
       <div class="check"></div>
     </div>
     <p v-if="!isSuccess" class="fail_message">預約時間已被人預定</p>
-    <button @click="$emit('close-booking')" class="return">回頁面</button>
+    <button @click="closeBooking" 
+    class="return">回頁面</button>
   </div>
 </template>
 <script>
 export default {
   name: "bookingResultDialogue",
+  methods:{
+    closeBooking(){
+      this.$store.commit('setBookingResult',null)
+      this.$emit('close-booking')
+    }
+  },
   computed: {
     isSuccess() {
       const result = this.$store.state.bookingResult;

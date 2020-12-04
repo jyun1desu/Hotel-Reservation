@@ -90,7 +90,7 @@
       <div></div>
     </div>
     <bookingResult
-      @close-booking="$emit('close-booking')"
+      @close-booking="$emit('close-booking');bookingInfoIsSend=false"
       v-if="gotBookingResult"
     />
   </div>
