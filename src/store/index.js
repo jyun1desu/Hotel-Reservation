@@ -8,7 +8,7 @@ export default createStore({
     allRooms:[],
     nowRoom: {},
     nowRoomBookingDays:[],
-    bookingResult:'',
+    bookingResult:null,
   },
   getters: {
   },
@@ -47,7 +47,7 @@ export default createStore({
     async postNewBooking({dispatch,commit},{roomID,bookingInfo}){
       try{
         await API.post(`room/${roomID}`,bookingInfo)
-        commit('setBookingResult','sucess')
+        commit('setBookingResult','success')
         dispatch('getNowRoomData',roomID)
       }catch(e){
         commit('setBookingResult','fail')

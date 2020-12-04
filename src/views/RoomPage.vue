@@ -6,10 +6,11 @@
     @cancel-booking="cancelBooking"
   />
   <bookingResultDialogue
-    v-if="true"
+    @close-result="closeResult"
+    v-if="showBookingResult"
   />
   <div class="room_page">
-    <div v-if="showLightbox || showBookingDialogue || true" class="mask"></div>
+    <div v-if="showLightbox || showBookingDialogue || showBookingResult" class="mask"></div>
     <lightbox 
     :show-index="showImageIndex"
     :images="roomImages"
@@ -141,6 +142,10 @@ export default {
       this.showBookingDialogue = false;
       this.pickedDay = "";
     },
+    closeResult(){
+      this.showBookingDialogue=false;
+      this.$store.commit('setBookingResult',null)
+    }
   },
   computed: {
     room() {
@@ -167,6 +172,14 @@ export default {
     roomImages(){
       const newArray = [this.room.imageUrl[1],this.room.imageUrl[0],this.room.imageUrl[2]]
       return newArray
+    },
+    showBookingResult(){
+      const gotResult = this.$store.state.bookingResult !==null
+      if(gotResult){
+        return true
+      }else{
+        return false
+      }
     }
   },
 };

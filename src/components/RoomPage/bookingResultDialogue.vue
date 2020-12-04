@@ -1,26 +1,46 @@
 <template>
   <div class="booking_result">
     <div class="dialogue">
-      <p class="message">預約成功</p>
+      <p class="message">{{message}}</p>
       <div class="dividing_line">
         <div class="line"><span></span></div>
         <div class="line"><span></span></div>
         <div class="line"><span></span></div>
       </div>
-      <div class="check_icon">
+      <div v-if="isSuccess" class="check_icon">
         <div class="circle"></div>
         <div class="check"></div>
       </div>
+      <p v-if="!isSuccess" class="fail_message">
+        預約時間已被人預定
+      </p>
+      <button 
+      @click="$emit('close-result')"
+      class="return">回頁面</button>
     </div>
   </div>
 </template>
 <script>
 export default {
   name: "bookingResultDialogue",
+  computed:{
+    isSuccess(){
+      const result = this.$store.state.bookingResult
+      if(result === 'success'){
+        return true
+      }else{
+        return false
+      }
+    },
+    message(){
+      return this.isSuccess?'預約成功':'預約失敗'
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
 $icon_color: #ADE8C6;
+$submit_button_color: #484848;
 .booking_result {
   padding: 15px;
   box-sizing: border-box;
@@ -33,6 +53,8 @@ $icon_color: #ADE8C6;
   justify-content: center;
   align-items: center;
   .dialogue {
+    display: flex;
+    flex-direction: column;
     min-width: 280px;
     box-sizing: border-box;
     background-color: #fff;
@@ -64,6 +86,28 @@ $icon_color: #ADE8C6;
           background-color: #000;
           transform: rotate(45deg);
         }
+      }
+    }
+
+    .fail_message{
+      font-size: 14px;
+      letter-spacing: 1.5px;
+    }
+
+    .return{
+      border: none;
+      background-color: $submit_button_color;
+      margin-top: 20px;
+      align-self: flex-end;
+      padding: 10px 20px;
+      color: #fff;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+
+      &:focus{
+        border: none;
+        outline: none;
       }
     }
   }
