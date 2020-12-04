@@ -2,15 +2,11 @@
   <bookingDialogue
     v-if="showBookingDialogue"
     :start-day="pickedDay"
-    @submit-booking="submitBooking"
-    @cancel-booking="cancelBooking"
-  />
-  <bookingResultDialogue
-    @close-result="closeResult"
-    v-if="showBookingResult"
+    @close-booking="closeBooking"
+    @cancel-booking="closeBooking"
   />
   <div class="room_page">
-    <div v-if="showLightbox || showBookingDialogue || showBookingResult" class="mask"></div>
+    <div v-if="showLightbox || showBookingDialogue" class="mask"></div>
     <lightbox 
     :show-index="showImageIndex"
     :images="roomImages"
@@ -106,7 +102,6 @@ import amenities from "../components/RoomPage/amenities.vue";
 import calenderPicker from "../components/RoomPage/calenderPicker.vue";
 import lightbox from "../components/RoomPage/lightbox.vue";
 import bookingDialogue from "../components/RoomPage/bookingDialogue.vue";
-import bookingResultDialogue from '../components/RoomPage/bookingResultDialogue';
 export default {
   name: "RoomPage",
   data() {
@@ -122,7 +117,6 @@ export default {
     calenderPicker,
     lightbox,
     bookingDialogue,
-    bookingResultDialogue,
   },
   methods: {
     toHomePage() {
@@ -134,18 +128,10 @@ export default {
       this.showBookingDialogue = true;
       this.pickedDay = date;
     },
-    submitBooking() {
+    closeBooking() {
       this.showBookingDialogue = false;
       this.pickedDay = "";
     },
-    cancelBooking() {
-      this.showBookingDialogue = false;
-      this.pickedDay = "";
-    },
-    closeResult(){
-      this.showBookingDialogue=false;
-      this.$store.commit('setBookingResult',null)
-    }
   },
   computed: {
     room() {
@@ -173,14 +159,6 @@ export default {
       const newArray = [this.room.imageUrl[1],this.room.imageUrl[0],this.room.imageUrl[2]]
       return newArray
     },
-    showBookingResult(){
-      const gotResult = this.$store.state.bookingResult !==null
-      if(gotResult){
-        return true
-      }else{
-        return false
-      }
-    }
   },
 };
 </script>

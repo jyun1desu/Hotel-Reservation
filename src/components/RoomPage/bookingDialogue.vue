@@ -1,6 +1,6 @@
 <template>
   <div class="booking">
-    <div class="dialogue">
+    <div v-if="!isLoading && !gotBookingResult" class="booking__dialogue">
       <p class="title">預約時段</p>
       <div class="dividing_line">
         <div class="line"><span></span></div>
@@ -83,19 +83,32 @@
         </div>
       </form>
     </div>
+    <div v-if="isLoading" class="loading">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <bookingResult
+      @close-booking="$emit('close-booking')"
+      v-if="gotBookingResult"
+    />
   </div>
 </template>
 
 <script>
 import calenderPicker from "./calenderPicker";
+import bookingResult from "./bookingResult";
 export default {
   name: "bookingDialogue",
   components: {
     calenderPicker,
+    bookingResult,
   },
   props: ["start-day"],
   data() {
     return {
+      bookingInfoIsSend: false,
       showCalenderPicker: false,
       bookingInfo: {
         client: null,
@@ -169,13 +182,11 @@ export default {
       const validPhoneNumber = /^09\d{8}$/.test(phone);
       if (!clientName || !validPhoneNumber || !checkinDay || !checkoutDay)
         return;
-      const roomID = this.nowRoom.id;
-      const info = this.bookingInfoSend;
-      this.$store.dispatch('postNewBooking',{
-        roomID:roomID,
-        bookingInfo:info,
-        })
-      this.$emit("submit-booking");
+      this.bookingInfoIsSend = true;
+      this.$store.dispatch("postNewBooking", {
+        roomID: this.nowRoom.id,
+        bookingInfo: this.bookingInfoSend,
+      });
       this.bookingInfo = {
         client: "",
         phone: "",
@@ -186,10 +197,10 @@ export default {
     cancelBooking() {
       this.$emit("cancel-booking");
       this.bookingInfo = {
-        client: null,
-        phone: null,
+        client: "",
+        phone: "",
         checkinDay: this.startDay,
-        checkoutDay: null,
+        checkoutDay: "",
       };
     },
     isBefore(day, anotherDay) {
@@ -217,6 +228,11 @@ export default {
     },
   },
   computed: {
+    isLoading() {
+      const bookingInfoIsSend = this.bookingInfoIsSend;
+      const gotResult = this.$store.state.bookingResult !== null;
+      return bookingInfoIsSend && !gotResult;
+    },
     livingDates() {
       const checkinDay = new Date(this.bookingInfo.checkinDay);
       const checkoutDay = new Date(this.bookingInfo.checkoutDay);
@@ -229,8 +245,12 @@ export default {
         const time = checkinDay.setDate(checkinDay.getDate() + i);
         const day = new Date(time);
         const year = day.getFullYear();
-        const month = (day.getMonth()+1)<10?`0${day.getMonth()+1}`:`${day.getMonth()+1}`;
-        const date = day.getDate()<10?`0${day.getDate()}`:`${day.getDate()}`;
+        const month =
+          day.getMonth() + 1 < 10
+            ? `0${day.getMonth() + 1}`
+            : `${day.getMonth() + 1}`;
+        const date =
+          day.getDate() < 10 ? `0${day.getDate()}` : `${day.getDate()}`;
         const dayInFormat = `${year}-${month}-${date}`;
         livingDaysArray.push(dayInFormat);
       }
@@ -279,9 +299,17 @@ export default {
       };
       return JSON.stringify(info);
     },
-    nowRoom(){
-      return this.$store.state.nowRoom
-    }
+    nowRoom() {
+      return this.$store.state.nowRoom;
+    },
+    gotBookingResult() {
+      const result = this.$store.state.bookingResult;
+      if (result !== null) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
@@ -307,202 +335,202 @@ $cancel_button_font_color: #6d7278;
   justify-content: center;
   align-items: center;
 
-  .dialogue {
-  min-width: 280px;
-  box-sizing: border-box;
-  background-color: #fff;
-  padding: $form_paddingY/2;
-  @include RWD($pad) {
-    width: 350px;
-    padding: 30px $form_paddingY;
-    box-sizing: content-box;
-  }
-
-  .title {
-    font-size: 24px;
-    letter-spacing: 2.5px;
-    margin: 0;
-  }
-
-  .dividing_line {
-    margin: 15px 0 15px 0;
+  &__dialogue {
+    min-width: 280px;
+    box-sizing: border-box;
+    background-color: #fff;
+    padding: $form_paddingY/2;
     @include RWD($pad) {
-      margin-bottom: 25px;
-    }
-    .line {
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      & + .line {
-        margin-left: 2px;
-      }
-      span {
-        display: block;
-        width: 13px;
-        height: 1px;
-        background-color: #000;
-        transform: rotate(45deg);
-      }
-    }
-  }
-  .booking_form {
-    .name,
-    .telephone,
-    .wantdays {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      & + div {
-        margin-top: 15px;
-      }
+      width: 350px;
+      padding: 30px $form_paddingY;
+      box-sizing: content-box;
     }
 
-    .telephone {
-      &.warning {
-        &::before {
-          content: "請輸入正確格式";
-          display: block;
-          background-color: pink;
-          width: 100px;
-          height: 100px;
-        }
-      }
-    }
-    .wantdays .input_title {
-      span {
-        display: block;
-        @include RWD($pad) {
-          display: inline;
-        }
-      }
-    }
-    .input_title {
-      flex: 0 0 25%;
-      font-size: 14px;
-      letter-spacing: 2px;
-      font-weight: 500;
+    .title {
+      font-size: 24px;
+      letter-spacing: 2.5px;
+      margin: 0;
     }
 
-    .input_space {
-      flex: 0 1 70%;
+    .dividing_line {
+      margin: 15px 0 15px 0;
       @include RWD($pad) {
-        flex: 0 1 70%;
+        margin-bottom: 25px;
       }
-      padding: 0 10px;
-      box-sizing: border-box;
-      border: 1px solid $input_border_color;
-      border-radius: $input_border_radius;
-      height: $input_height;
-      font-family: "Roboto", sans-serif;
-      font-weight: 300;
-      font-size: 12px;
-      letter-spacing: 1px;
-      &:focus {
-        outline: none;
-      }
-      &.warning {
-        border: 1px solid red;
-      }
-    }
-
-    .pickday_inputs {
-      position: relative;
-      flex: 0 1 70%;
-      display: flex;
-      flex-direction: column;
-      @include RWD($pad) {
-        flex-direction: row;
-        justify-content: space-between;
-      }
-
-      .input_blocks {
-        flex: 1 1 100%;
-        text-align: center;
-        @include RWD($pad) {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
-        }
-      }
-
-      .dash {
+      .line {
         display: inline-block;
-        align-self: center;
-        transform: rotate(90deg);
-        @include RWD($pad) {
-          transform: rotate(0);
-          margin: 0 20px;
+        width: 15px;
+        height: 15px;
+        & + .line {
+          margin-left: 2px;
         }
-      }
-
-      .input_space {
-        flex: 0 1 100%;
-        line-height: 25px;
-        text-align: center;
+        span {
+          display: block;
+          width: 13px;
+          height: 1px;
+          background-color: #000;
+          transform: rotate(45deg);
+        }
       }
     }
-
-    .total_price {
-      .calculation {
-        background-color: #ededed;
-        margin: 0 0-$form_paddingY/2;
-        padding: 10px $form_paddingY/2;
-        @include RWD($pad) {
-          margin: 0 0-$form_paddingY;
-          padding: 10px $form_paddingY;
+    .booking_form {
+      .name,
+      .telephone,
+      .wantdays {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        & + div {
+          margin-top: 15px;
         }
+      }
 
-        & > div {
-          display: flex;
-          justify-content: space-between;
-          span {
-            font-size: 12px;
-            letter-spacing: 1px;
-            color: #6d7278;
+      .telephone {
+        &.warning {
+          &::before {
+            content: "請輸入正確格式";
+            display: block;
+            background-color: pink;
+            width: 100px;
+            height: 100px;
           }
         }
       }
-      .result {
-        margin-top: 15px;
-        font-size: 26px;
-        font-weight: 300;
-        text-align: right;
-        letter-spacing: 3px;
-        color: #ff5c5c;
-
-        &::before {
-          content: "=";
-          margin-right: 20px;
+      .wantdays .input_title {
+        span {
+          display: block;
+          @include RWD($pad) {
+            display: inline;
+          }
         }
       }
-    }
+      .input_title {
+        flex: 0 0 25%;
+        font-size: 14px;
+        letter-spacing: 2px;
+        font-weight: 500;
+      }
 
-    .buttons {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 30px;
-      & > button {
-        border: none;
-        padding: 10px 25px;
-        cursor: pointer;
-
+      .input_space {
+        flex: 0 1 70%;
+        @include RWD($pad) {
+          flex: 0 1 70%;
+        }
+        padding: 0 10px;
+        box-sizing: border-box;
+        border: 1px solid $input_border_color;
+        border-radius: $input_border_radius;
+        height: $input_height;
+        font-family: "Roboto", sans-serif;
+        font-weight: 300;
+        font-size: 12px;
+        letter-spacing: 1px;
         &:focus {
-          border: none;
           outline: none;
         }
+        &.warning {
+          border: 1px solid red;
+        }
       }
 
-      &__submit {
-        background-color: $submit_button_color;
-        color: #fff;
+      .pickday_inputs {
+        position: relative;
+        flex: 0 1 70%;
+        display: flex;
+        flex-direction: column;
+        @include RWD($pad) {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        .input_blocks {
+          flex: 1 1 100%;
+          text-align: center;
+          @include RWD($pad) {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+          }
+        }
+
+        .dash {
+          display: inline-block;
+          align-self: center;
+          transform: rotate(90deg);
+          @include RWD($pad) {
+            transform: rotate(0);
+            margin: 0 20px;
+          }
+        }
+
+        .input_space {
+          flex: 0 1 100%;
+          line-height: 25px;
+          text-align: center;
+        }
       }
-      &__cancel {
-        background-color: $cancel_button_color;
-        color: $cancel_button_font_color;
+
+      .total_price {
+        .calculation {
+          background-color: #ededed;
+          margin: 0 0-$form_paddingY/2;
+          padding: 10px $form_paddingY/2;
+          @include RWD($pad) {
+            margin: 0 0-$form_paddingY;
+            padding: 10px $form_paddingY;
+          }
+
+          & > div {
+            display: flex;
+            justify-content: space-between;
+            span {
+              font-size: 12px;
+              letter-spacing: 1px;
+              color: #6d7278;
+            }
+          }
+        }
+        .result {
+          margin-top: 15px;
+          font-size: 26px;
+          font-weight: 300;
+          text-align: right;
+          letter-spacing: 3px;
+          color: #ff5c5c;
+
+          &::before {
+            content: "=";
+            margin-right: 20px;
+          }
+        }
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 30px;
+        & > button {
+          border: none;
+          padding: 10px 25px;
+          cursor: pointer;
+
+          &:focus {
+            border: none;
+            outline: none;
+          }
+        }
+
+        &__submit {
+          background-color: $submit_button_color;
+          color: #fff;
+        }
+        &__cancel {
+          background-color: $cancel_button_color;
+          color: $cancel_button_font_color;
+        }
       }
     }
   }
-}
 }
 
 .picker {
@@ -519,6 +547,44 @@ $cancel_button_font_color: #6d7278;
 
   .day {
     padding: 10px;
+  }
+}
+
+.loading {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+
+  & > div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+
+    &:nth-child(1) {
+      animation-delay: -0.45s;
+    }
+    &:nth-child(2) {
+      animation-delay: -0.3s;
+    }
+    &:nth-child(3) {
+      animation-delay: -0.15s;
+    }
+  }
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>
