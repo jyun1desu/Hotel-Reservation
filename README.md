@@ -39,3 +39,4 @@
 * 使用 async function 處理非同步事件
 * vuex action
 * vue router 生命週期
+* Vue CLI部署至github page
